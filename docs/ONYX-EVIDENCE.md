@@ -29,3 +29,14 @@ gno test ./v2
 ```
 
 The [Markets v2 tests](../contracts/v2/markets_test.gno) cover buying, proposing an outcome, finalizing and claiming. They also assert that a Void refunds the recorded cost and fee. The [collateral property test](../contracts/v2/threat_test.gno) checks every holder's payout across generated market scenarios.
+
+
+## Recompute the v2 evidence hashes
+
+[Download the two evidence records](ONYX-V2-EVIDENCE.json). Each record contains the Onyx market binding and the payout vector returned by two Polygon RPCs. Run this from the repository root with Node 24:
+
+```sh
+node --input-type=module -e 'import {readFileSync} from "node:fs"; import {canonicalJson,sha256Hex} from "./src/live/oracle.ts"; for (const {record,evidenceHash} of JSON.parse(readFileSync("docs/ONYX-V2-EVIDENCE.json","utf8"))) { const actual=await sha256Hex(canonicalJson(record)); if(actual!==evidenceHash) throw new Error(record.binding.marketId); console.log(record.binding.marketId,actual); }'
+```
+
+Compare the two results with their `Finalized` receipts above. The hash commits to the evidence data. The designated oracle proposes the result, and the guardian has 24 hours to reject it.
