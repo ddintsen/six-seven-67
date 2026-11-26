@@ -1,0 +1,85 @@
+{
+ "duration": 52,
+ "cues": [
+  {
+   "t": 0.2,
+   "kind": "caption"
+  },
+  {
+   "t": 3,
+   "kind": "caption"
+  },
+  {
+   "t": 6,
+   "kind": "caption"
+  },
+  {
+   "t": 10,
+   "kind": "caption"
+  },
+  {
+   "t": 14,
+   "kind": "caption"
+  },
+  {
+   "t": 16.5,
+   "kind": "caption"
+  },
+  {
+   "t": 18.5,
+   "kind": "caption"
+  },
+  {
+   "t": 20.5,
+   "kind": "caption"
+  },
+  {
+   "t": 23.5,
+   "kind": "caption"
+  },
+  {
+   "t": 26,
+   "kind": "caption"
+  },
+  {
+   "t": 30,
+   "kind": "caption"
+  },
+  {
+   "t": 33,
+   "kind": "caption"
+  },
+  {
+   "t": 36,
+   "kind": "caption"
+  },
+  {
+   "t": 42,
+   "kind": "robot"
+  },
+  {
+   "t": 42.9,
+   "kind": "line"
+  },
+  {
+   "t": 43.4,
+   "kind": "line"
+  },
+  {
+   "t": 43.9,
+   "kind": "line"
+  },
+  {
+   "t": 44.4,
+   "kind": "line"
+  },
+  {
+   "t": 44.9,
+   "kind": "line"
+  },
+  {
+   "t": 47,
+   "kind": "end"
+  }
+ ]
+}

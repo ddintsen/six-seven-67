@@ -1,0 +1,690 @@
+[
+  {
+    "conditionId": "0xdcae9573d5680a2c958cca4676ed28df7a06861572124f3396cc60ab6b92b9c2",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "47113934605305582772590235372495078183833796521066344951188393486940857661087",
+      "108842731603268388872372442680604828937896736777451176037156713596409310394087"
+    ],
+    "rulesHash": "0e7dfe080c3a3a4d00917dc77a51a8d8b5ab9ac57a08b9fefb498c9308073f6e",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "btc-vs-gold-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x0a1b551058f78174cf64ed9d61edb103a76c4df88232ee1188dbc9e390896e7d",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "68841043137419682742407917950323128757425564408860523030307999893432460743024",
+      "56474994774559829851462437736234567725783260130778254578352001078848194168934"
+    ],
+    "rulesHash": "8887b319b07a9be5d5b40869f942035877512dea00c7aa6cb4a92b6cf4e40c79",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "starship-reusable-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x0a84cdeb03a25ae441697191edbcc31ad6803c3f4d48af2e0429952336c04fc1",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "32842597925388411947401997144667159337666668967988464279723455370811463728753",
+      "99286648655633868231744185944605567361660243879695992570555682921500736029261"
+    ],
+    "rulesHash": "25fa1e103830ac539d1ecca9e3045e9cce69f7318f726180fa21278e87be484b",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "apple-new-line-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x9b1a03b41a1a68c209e9c3caf3d8af3f878420d6dbe8cb8afffd66049e73b114",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "834988939366537589681339435844742816680296103724655311351481456389958777625",
+      "51699731593220798404378104978434018325263546766663573208722653674626387696963"
+    ],
+    "rulesHash": "e80026475de13e4f5a81ff0b5a92f51dcdf4ccfe5cdd4af1274dbf8b21b8abac",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "fed-hike-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x34918035a590555ba1fb1d6a019d766ab6e557d63e7f3140b63b4550eee7f417",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "15290572385458522370285732869432740297199321382471116558439914335588167718663",
+      "25172545206000541692667496253531562288536270988826888609620735617040533835056"
+    ],
+    "rulesHash": "a115debbf55825f8764d9cc65c48157393ea72d8e55e7792889e759265c854e5",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "texas-senate-democrats-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x2c00cb09722a0f0501c5e49131b898ed57bb5c075db4dc2bcbc14908f45b8c48",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "2142948285506077695096498341598672159464223074468931276310105532825810210121",
+      "43295283577056639281694071578249936735369407445693289764095672178175084599787"
+    ],
+    "rulesHash": "6c5e52efd48f69e7a3f56ea34e33e902aef1ed82d01fcf341bf2b8da44fe909b",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "maine-senate-republicans-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x968a1a79e001d49fa3ee1429e3b95eb01797587740f86d4e6becf3ab1b275bfb",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "83018072688154066292491996133599479395547801317505487833443670253228061205312",
+      "79825167762459488478206414509755176562349257846652439268369145558426777722770"
+    ],
+    "rulesHash": "96fa567b8c35ec8f8aa2b9a9158b617b1ca25a9ec287c7d9ac1f0b922a5c72a1",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "ohio-senate-democrats-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x741bb46008b72234857c5118c8365ab3c2f69dbf28b30b59de04f173b8a778de",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "2618138322856109565904469085316346602627882727483900432328802655317079880335",
+      "64264976954058187238724333554507208255303776435657387002861226761784169752307"
+    ],
+    "rulesHash": "57f9045070ae87163bd06d9a7feaa8969c5c01c105ffd8c58350a9862dba69a8",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "alaska-senate-sullivan-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x707eb5c6df23e32e0b770dd0ccd1245abb7fac0dcfd24d8b68dd99e5ca737180",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "1246864710804983890692377994891598401616546411512113588399830364959833951829",
+      "63105785868222491666410116782074992901361520126431203229953017216126863105293"
+    ],
+    "rulesHash": "2aca61bca34970683fdfa75c614ad39c694ac2d73a89233d2b92588bbaccf182",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "nevada-governor-democrats-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x12b727031b38130d945b3e164386874360d9a32fdd7e3d00ed2adb13857e089b",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "48232987449750988261789196083999659380058157021032932634331257492238853387252",
+      "72484470323457781490418074887818414956328925259630173408815876344351328006429"
+    ],
+    "rulesHash": "b01a36e70676401b17a3edf1b5cee3ebd7899426eadcc631c07ac3ae9f196816",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "texas-governor-democrats-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x3babe91f8d2fac44027f9ba7f0f1a59e61b72419828e6e517f96bbcf4e132498",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "63255709540320761353971859526848930870803944190764324681913735372035438815215",
+      "16976595754865702888942253430173145813500518669245701188211359895815715104826"
+    ],
+    "rulesHash": "de4695d532297aaaa058308de42a8c5cc2d3817eb74d8feb0e217828c05b1296",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "ohio-governor-democrats-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0xe0fbb3e61e61b14f5fef15ffdd0e2a0c6cf4336bb5b15877fe3e3c9fdcc6bc7f",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "94033987553817825990709512567031751048276730850154145976615728913102874968691",
+      "89249778688472138415584633654306240159785502169216857650010692296295315613845"
+    ],
+    "rulesHash": "418354fcb1cb504b1a0a56b859f64b81d3d5ee8478c1801ef2096d9a9247b346",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "montana-01-house-democrats-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x50f740162f52bcef8c8035e5b175c7ad6f5230b7ffbed4cbd5733ff93fc91168",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "109972039784538003535573132821364819132290674018564050436004350179491214637743",
+      "67529754895171955938758533776468490692766923438172166755798649719748513057231"
+    ],
+    "rulesHash": "4967c6b14a5ca4d40577ef101fe0d0cb66cd2abc3770182f10d918f2ea20a897",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "trump-cabinet-unchanged-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x68e2344a2ce725ca99f3b93df06f27a71f3a893a38e8a6a78f8d85bd2698eb20",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "44488146241641686838477630423381146915926290111161217223359635890474557300976",
+      "55066760863682681011750966950739411296364830422172387835703592639644113734177"
+    ],
+    "rulesHash": "d1cd1d41651adc1bd9a5c386878f0c9c65dec2f4ce1ab6de410f35df3cfd61b2",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "scotus-event-contracts-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x8126317d621047fb13d508a2651eecc8d38305904671822a62309c5aabd353aa",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "55764212211467781322980371912612507865974994976253196346176314491480419639168",
+      "5649717099758674861276159343380402289083378331461490840325685141994171250523"
+    ],
+    "rulesHash": "ffe91fcabcd6e93f88c2b92c9c85a7ab59c4a6086631dd15000dd27aef6a639f",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "le-pen-president-2027",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x338f6f3e5ff30f189a7228290a66b9a4213722032da364c8635b496589ddfd3b",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "113387238875096876242426408850350538617653375950929781131630585449348321994416",
+      "10448767077824322812450706422672966941639938701843052831790629042257312389174"
+    ],
+    "rulesHash": "2e42d0cc7b35bce1d32bb3de69980c5b75cfd22a1a3e21e120f699dd25a4981c",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "milei-president-2027",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x162e356bfab7ad18fe4e3029d5811d9a95fce95d93858b42924a3b9ffbcf1a93",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "16776682188052117519689891208085293054849422310072397287583657274883056961244",
+      "102087788305986740336345450197457276518710006151067578568172973702360191105051"
+    ],
+    "rulesHash": "d0b1cfcfdcd82ded64f09451f01a87c1f8bd91b51267923d3bc124e5a57e7498",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "spain-election-pp-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x890f9b8de730479549e95027f26aad5ce89ecc4a42a6fd6316d0b0aec9a5aad1",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "38943156005562933924590395107769174031077435060879703425069135833415221550151",
+      "48069029602522438566697221508835732014168815060862308159598480358509516768097"
+    ],
+    "rulesHash": "1653587a74ab46a5fe24292105ff1cd24b3ae80e031362edac08d20d6bfeae10",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "sanchez-out-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0xb5395470c9b87f5ae8ffc719c1376aa89b493adf083e01cb8064e683fbaa18fc",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "19498086334837117662313425627954796042138275594291936116717226540039067277361",
+      "33948383215136644432533371238863136180727484636430037616426554075016398089174"
+    ],
+    "rulesHash": "ae05067126a3aecdf00602a61abc441ab9b155f77511d6690a2da5b003ae8fa5",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "trump-kim-meeting-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0xc0f076bc4d90a44df34a729277e9d1f294f0cb60d2c3b1b3800908b1e15b923b",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "85632914518786177256583369552125280053108667306405854845853340618248288927460",
+      "4696955573632845407532815267539406678302911508204032661527405293140196109387"
+    ],
+    "rulesHash": "9ada1338ac8cd8e57a0cbe9c66c2ed56a1033563d696db1dac30c9eb8994f2aa",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "taiwan-local-kmt-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x910aabbfae28b3569929c31fb5461f4db13f7ddd427bdee1e696d313125838e3",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "71621185653281721927174401118354054745399424014255544529977515442951477963801",
+      "72820619922053432516748905329266890906103969024802768151634670763988243600546"
+    ],
+    "rulesHash": "6942cbe4efefefd2fab8f5ac97279ac8ae7f87d115abb4e90cb8d7169bdbbab1",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "taipei-mayor-shen-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x16dd5e4c4bfa3f3095c3ff0def4bed556eba411e3cdbf7b463b3b9a74c1d93a4",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "89500673908097597906591339142232589618046825453146074245854666302243957916021",
+      "85375547246839457656540637130161240130803028993782681477831906794644854814586"
+    ],
+    "rulesHash": "c71ec9c943f4416071a830996e1b3f632790d08b414685dd6dd56f855c419f63",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "fed-upper-bound-425-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0xff8ae213f43c3c61299bafb0b153b45d6e112f515601b71b59816de6908321f4",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "70385825801885444256285726169277138144171910910615374854814345084550291704671",
+      "32475777992575382181528811204169322338789336560189457387763773770286919006756"
+    ],
+    "rulesHash": "bb7b80de2aa97ed846102a33e91409d154ddca338210067c7dad39d9a5f6b157",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "fed-two-hikes-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0xf4a457c3a455917897fd89aa7d1cea256a8b325eded3c05c7ff771c948fbeaad",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "74673761985513157199971989678705947308950428080518161992747749503329915181832",
+      "21769847188346037859472757545480650964035482557504606259957008452341115862340"
+    ],
+    "rulesHash": "8e0fe338037a3aae2acb9b87b4872294ebcec7d28e25497649f92df90fd0b61c",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "us-inflation-above-45-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0xbb379a14cd03f68c35c279ddbd928a6326f4fd2e21827f8cdaaf59715d6df50e",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "89384721767526056909881321094852287855436067743554155484781205764118128944311",
+      "89935193776001764234914810530894985625350942201527563326613427606200761992090"
+    ],
+    "rulesHash": "81e1a09140f4321efbdfe927b79087dbc139001c99217badbb4bb3acdf747795",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "bitcoin-90k-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x99a1879635bc8873891cc472d5e39ca0efaf2017c562ae244810747a7f8edbd5",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "66335306745821529065179061745515953781644081595464464996921948603911228936814",
+      "63382519856399132244485492020084100091374236550290181904952415637486462703240"
+    ],
+    "rulesHash": "9c8532b509905c9918fa583068883202836ec8bdac070a6920497548e98c17df",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "ethereum-dips-2250-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0xeae133a71045c94ab57717d3f4aab62758e2a915a27f9606e383024975264467",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "55632531164259874581532086463096765375675122310464288883906870061905029632548",
+      "82003890293227858144443690621129151751310907536390973939184375026419648685691"
+    ],
+    "rulesHash": "595e354d7a78d2738497aa8e2cf3e1213c2089877d6346f0cbbac530d3126b2a",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "hyperliquid-100-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x8b2c465928dfda7a0decfb93bc4bbd60e067a6c57016d678dd97c49ba76f3bdd",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "69173727652368747128236955922218906950929081188168783728953530362724870253611",
+      "46061353941500337945456217526255127998661855935112699202109962702794747234160"
+    ],
+    "rulesHash": "dfcad4276bde9c51f54431fcb9e1b2bc9f33f4dc2f1e6e327d69e777e2706421",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "solana-140-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x95feddfb444684affe3347fbe3c5af37092a6315ba2b389dc187ad5661527d0a",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "114601905620399478366872883723128209209706772729401525531940325145395181519141",
+      "110218864362089053198088384626568563755174763622047595529703602633589327401046"
+    ],
+    "rulesHash": "c425c97ce7304f1acc7a4720a2dae18379a80c1e676de4a1108d0bac0ae58e36",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "predict-fun-token-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x117f9132e15eeff2621be398fa57092cf446a2f02cbd7ee8e3714226705c4d3b",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "34819265358532535745389081655110465366205614488485370986851183512281332080312",
+      "42274213845690772723790725807949730963070164957660604430887551499063365043259"
+    ],
+    "rulesHash": "03071fa7b686bcc778351ddd588c2aeb3bd5daa0d5f0018d8e8e539c1f3b54d3",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "openai-millennium-prize-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x85647246dede70416c9c71ea851d87facf4b5efe58c685f4acc5ea94a9487c10",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "54008746047030401937229622392846672148881831664328316511258982815120785809185",
+      "101711789412405174054428730370251221054106361024009959880641004430966000525926"
+    ],
+    "rulesHash": "3f6adcaf2cac1e73a05583cdd0d066a5f7624624689a59c322e939a94c276396",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "tesla-spacex-merger-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x490b4abcc5b23958f5515716fbab843574f9cffef4bc52eac3a3939809757b46",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "51360528208563810292617548915637013520775537929179951806395074353974983084730",
+      "84398328375476251033972782363473460090232405474369579323403988122052606893532"
+    ],
+    "rulesHash": "68ed37e7b838682d197e110d431d0fc5545bf8e144d6bb6f9c5f83692d2276d9",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "james-bond-lowden",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x5d554b8061faaf973115ad48859a04096cd3525873c730964ac7526076315c29",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "82017183730405650384104430290945791070039022570334386685934371052148316112285",
+      "56862573503356103553227491962578050446500362262046087912221284617749216969319"
+    ],
+    "rulesHash": "940564c6937789dfec8af9a8333d7db62aa2479e89d45cea3ecfab0d140d4024",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "oscars-odyssey-best-picture",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x45645b3996c6170c477de5f81a04da30d0df6ebf01acb155733aed37458497c2",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "68507889412884178261450577685771245341500964701823352333424141244812660334919",
+      "22324875624356404287411829025251210732769155030460488947975954656163456444185"
+    ],
+    "rulesHash": "80ff3a36b805d464b8c270f5d07d21e67be94b59839d007356e0d32f7fad953f",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "billboard-wallen-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0xa05d8a684b40450d2b8a8fdf07df0b50089de97f675bb4489ffa81b00abb60c4",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "48473883682600707005098412865804303754496452983474980263602779701747181706691",
+      "39922726686074943992323043337069384440100330182435313658155726755185947061273"
+    ],
+    "rulesHash": "16049bfaa60dbfa6c66a3f9f5faa3f0c7ac47a1d45e76df10deaf599867f1b7b",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "avengers-doomsday-opening-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0xe2e548cb9997dd0c6349f0e4562bbf560f399787a377c1144e70782335afe3cf",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "3922988387979671390782142823912026837077313109900926550849222590676683070878",
+      "86236323820419368790546237109700494524049120129804730710524247957499070522205"
+    ],
+    "rulesHash": "b8e902185d11c8b9db11aadb25b4cbaab2a1c2700b861dad68b4a3bc8910eee0",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "spotify-djo-top-song-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x12dc2b61723b2a54fc1947a307389b5f32038e7a29a0e936ad1fe410b969d06a",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "72710166409980712002774407052535905861151156175854323762835102340552522606004",
+      "77740376296468109233042620775325425521895874827413068707200627224591548200577"
+    ],
+    "rulesHash": "16d9667e0c42880c51ea91ef09487aa97c1b6e03ad7a6bca45d761ae64a0e126",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "ballon-dor-kane-2026",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0xf02d8d72bb96d84090d4f7d63e7837afb94f8d061e7a2cca8cf21732150e8815",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "106464589845250400124249015666766731317110899241411841699938652823328750757436",
+      "64668172167711604019715186222824944338693111460367065137032921758495495127809"
+    ],
+    "rulesHash": "7c5d8870eff71c2476d92c16a59ccb8cfe3429cbd72fdc2157f7cc30fe06e7fb",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "premier-league-arsenal-2027",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0xa23467e95abf6544819a9dcb90b7719846aacf300b991ea07204e1f1649097cb",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "105424657244554511014150825202397702180419919286931996082717264149902476600628",
+      "34945358399694068879260737230963453183436310658083966074000573983342060858792"
+    ],
+    "rulesHash": "45962b96f2a9f54ac8432ddf4bececbb84f8473b7adefff3fdbdbacaa5b67a1b",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "champions-league-barcelona-2027",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x2cf1d3add82128e953811f4412f6e0f34776fe3c4b60f4f4b8b61ef3b7745b28",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "92246328562240089384474835445688219606997651896071452249894684219516278032639",
+      "91563745356984937412391884454076142268614343737137059617731076113314484973352"
+    ],
+    "rulesHash": "b12f34445f659fa9e9a83560694aae7029497c491c16975f0e1d87a45daee59b",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "ligue-1-psg-2027",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x6099e6b30c4ee1d3121e5ebe4760ebff446ec5d7eef1b9c43dd2e9cfd59a556c",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "39837385690303579870717217200412085690608514752076614686048080531386540862921",
+      "47412485874176023148834455634160749312363704169131690715196573157479647440035"
+    ],
+    "rulesHash": "6d394c41827edd5709198f4f38d7e5744f3dbefd761eff13de3bd5f8bc017e2c",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "super-bowl-49ers-2027",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x9b9c693020bd625462107ea7963bacfefe73e678dd0e001c2d11388395a3cc2e",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "47942880964158617614279118228047750547985543191564455484169740327839925876869",
+      "34079851482053293361932351143019209193108191421795047260065638898939690262262"
+    ],
+    "rulesHash": "fb03861159ef8e3bae19c43d3e6956111254b2d89895fe5fb03de745c45504f0",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "nba-finals-spurs-2027",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  },
+  {
+    "conditionId": "0x4837fae2b39802b08f8abc4d557a22355efad89083328d2cc81f8d0b2b11a280",
+    "outcomes": [
+      "Yes",
+      "No"
+    ],
+    "tokenIds": [
+      "111043967021673138340771270763207521090909353420221884051488769478277979731304",
+      "16996961186971519628355049424314055169068086349531623464179389204622510791098"
+    ],
+    "rulesHash": "9b25c69472887328c3d52b11fb65aba5881baf4fd7c54a56ffcbf767bea2ff63",
+    "gnoChainId": "onyx-1",
+    "gnoRealm": "gno.land/r/nym-sixseven067/markets",
+    "gnoMarketId": "stanley-cup-avalanche-2027",
+    "oracleAddress": "g1hsxx0r86afsrwxkf38kqq5zursfrgjmp35fcvy"
+  }
+]

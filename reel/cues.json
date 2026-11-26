@@ -1,0 +1,576 @@
+{
+ "duration": 68,
+ "cues": [
+  {
+   "at": 0,
+   "kind": "scene-mark"
+  },
+  {
+   "at": 1,
+   "kind": "mark-land",
+   "side": "yes",
+   "index": 0
+  },
+  {
+   "at": 2.5,
+   "kind": "mark-land",
+   "side": "yes",
+   "index": 1
+  },
+  {
+   "at": 2.625,
+   "kind": "mark-land",
+   "side": "yes",
+   "index": 2
+  },
+  {
+   "at": 2.75,
+   "kind": "mark-land",
+   "side": "yes",
+   "index": 3
+  },
+  {
+   "at": 2.875,
+   "kind": "mark-land",
+   "side": "yes",
+   "index": 4
+  },
+  {
+   "at": 3,
+   "kind": "mark-land",
+   "side": "yes",
+   "index": 5
+  },
+  {
+   "at": 3.125,
+   "kind": "mark-land",
+   "side": "yes",
+   "index": 6
+  },
+  {
+   "at": 3.25,
+   "kind": "mark-land",
+   "side": "yes",
+   "index": 7
+  },
+  {
+   "at": 3.375,
+   "kind": "mark-land",
+   "side": "yes",
+   "index": 8
+  },
+  {
+   "at": 3.5,
+   "kind": "mark-land",
+   "side": "yes",
+   "index": 9
+  },
+  {
+   "at": 3.625,
+   "kind": "mark-land",
+   "side": "yes",
+   "index": 10
+  },
+  {
+   "at": 4,
+   "kind": "word",
+   "side": "yes"
+  },
+  {
+   "at": 4.5,
+   "kind": "mark-land",
+   "side": "no",
+   "index": 11
+  },
+  {
+   "at": 4.625,
+   "kind": "mark-land",
+   "side": "no",
+   "index": 12
+  },
+  {
+   "at": 4.75,
+   "kind": "mark-land",
+   "side": "no",
+   "index": 13
+  },
+  {
+   "at": 4.875,
+   "kind": "mark-land",
+   "side": "no",
+   "index": 14
+  },
+  {
+   "at": 5,
+   "kind": "mark-land",
+   "side": "no",
+   "index": 15
+  },
+  {
+   "at": 5.125,
+   "kind": "mark-land",
+   "side": "no",
+   "index": 16
+  },
+  {
+   "at": 5.25,
+   "kind": "mark-land",
+   "side": "no",
+   "index": 17
+  },
+  {
+   "at": 6,
+   "kind": "word",
+   "side": "no"
+  },
+  {
+   "at": 7,
+   "kind": "word"
+  },
+  {
+   "at": 8,
+   "kind": "scene-forest"
+  },
+  {
+   "at": 12,
+   "kind": "scene-ui"
+  },
+  {
+   "at": 14,
+   "kind": "tap",
+   "side": "yes"
+  },
+  {
+   "at": 16,
+   "kind": "scene-ticket"
+  },
+  {
+   "at": 16,
+   "kind": "ui-in"
+  },
+  {
+   "at": 17.25,
+   "kind": "press"
+  },
+  {
+   "at": 17.5,
+   "kind": "ui-cut"
+  },
+  {
+   "at": 18.5,
+   "kind": "press"
+  },
+  {
+   "at": 18.75,
+   "kind": "confirmed"
+  },
+  {
+   "at": 20,
+   "kind": "scene-price"
+  },
+  {
+   "at": 21,
+   "kind": "pile-land",
+   "side": "no",
+   "index": 0
+  },
+  {
+   "at": 21.125,
+   "kind": "pile-land",
+   "side": "yes",
+   "index": 1
+  },
+  {
+   "at": 21.25,
+   "kind": "pile-land",
+   "side": "no",
+   "index": 2
+  },
+  {
+   "at": 21.375,
+   "kind": "pile-land",
+   "side": "no",
+   "index": 3
+  },
+  {
+   "at": 21.5,
+   "kind": "pile-land",
+   "side": "yes",
+   "index": 4
+  },
+  {
+   "at": 21.625,
+   "kind": "pile-land",
+   "side": "no",
+   "index": 5
+  },
+  {
+   "at": 21.75,
+   "kind": "pile-land",
+   "side": "yes",
+   "index": 6
+  },
+  {
+   "at": 21.875,
+   "kind": "pile-land",
+   "side": "no",
+   "index": 7
+  },
+  {
+   "at": 26,
+   "kind": "pile-rise",
+   "side": "no",
+   "index": 8
+  },
+  {
+   "at": 26,
+   "kind": "quote"
+  },
+  {
+   "at": 26.25,
+   "kind": "pile-land",
+   "side": "yes",
+   "index": 9
+  },
+  {
+   "at": 28,
+   "kind": "pile-rise",
+   "side": "no",
+   "index": 10
+  },
+  {
+   "at": 28,
+   "kind": "quote"
+  },
+  {
+   "at": 28.25,
+   "kind": "pile-land",
+   "side": "yes",
+   "index": 11
+  },
+  {
+   "at": 30,
+   "kind": "pile-rise",
+   "side": "no",
+   "index": 12
+  },
+  {
+   "at": 30,
+   "kind": "quote"
+  },
+  {
+   "at": 30.25,
+   "kind": "pile-land",
+   "side": "yes",
+   "index": 13
+  },
+  {
+   "at": 32,
+   "kind": "scene-calls"
+  },
+  {
+   "at": 34.75,
+   "kind": "seal"
+  },
+  {
+   "at": 36.5,
+   "kind": "story-land",
+   "side": "yes",
+   "index": 0
+  },
+  {
+   "at": 36.625,
+   "kind": "story-land",
+   "side": "no",
+   "index": 1
+  },
+  {
+   "at": 36.75,
+   "kind": "story-land",
+   "side": "yes",
+   "index": 2
+  },
+  {
+   "at": 36.875,
+   "kind": "story-land",
+   "side": "no",
+   "index": 3
+  },
+  {
+   "at": 37,
+   "kind": "story-land",
+   "side": "yes",
+   "index": 4
+  },
+  {
+   "at": 37.125,
+   "kind": "story-land",
+   "side": "yes",
+   "index": 5
+  },
+  {
+   "at": 37.25,
+   "kind": "story-land",
+   "side": "no",
+   "index": 6
+  },
+  {
+   "at": 37.375,
+   "kind": "story-land",
+   "side": "yes",
+   "index": 7
+  },
+  {
+   "at": 37.5,
+   "kind": "story-land",
+   "side": "no",
+   "index": 8
+  },
+  {
+   "at": 37.625,
+   "kind": "story-land",
+   "side": "yes",
+   "index": 9
+  },
+  {
+   "at": 37.75,
+   "kind": "story-land",
+   "side": "no",
+   "index": 10
+  },
+  {
+   "at": 37.875,
+   "kind": "story-land",
+   "side": "yes",
+   "index": 11
+  },
+  {
+   "at": 38,
+   "kind": "story-land",
+   "side": "no",
+   "index": 12
+  },
+  {
+   "at": 38.125,
+   "kind": "story-land",
+   "side": "yes",
+   "index": 13
+  },
+  {
+   "at": 38.25,
+   "kind": "story-land",
+   "side": "no",
+   "index": 14
+  },
+  {
+   "at": 38.375,
+   "kind": "story-land",
+   "side": "yes",
+   "index": 15
+  },
+  {
+   "at": 40,
+   "kind": "oracle"
+  },
+  {
+   "at": 44,
+   "kind": "claim",
+   "index": 0
+  },
+  {
+   "at": 44.25,
+   "kind": "claim",
+   "index": 1
+  },
+  {
+   "at": 44.5,
+   "kind": "claim",
+   "index": 2
+  },
+  {
+   "at": 44.75,
+   "kind": "claim",
+   "index": 3
+  },
+  {
+   "at": 45,
+   "kind": "claim",
+   "index": 4
+  },
+  {
+   "at": 45.25,
+   "kind": "claim",
+   "index": 5
+  },
+  {
+   "at": 45.5,
+   "kind": "claim",
+   "index": 6
+  },
+  {
+   "at": 45.75,
+   "kind": "claim",
+   "index": 7
+  },
+  {
+   "at": 46,
+   "kind": "claim",
+   "index": 8
+  },
+  {
+   "at": 48,
+   "kind": "scene-claim"
+  },
+  {
+   "at": 48,
+   "kind": "ui-in"
+  },
+  {
+   "at": 49.5,
+   "kind": "press"
+  },
+  {
+   "at": 49.75,
+   "kind": "claimed"
+  },
+  {
+   "at": 52,
+   "kind": "scene-code"
+  },
+  {
+   "at": 52.5,
+   "kind": "check",
+   "index": 0
+  },
+  {
+   "at": 53.5,
+   "kind": "check",
+   "index": 1
+  },
+  {
+   "at": 54.5,
+   "kind": "check",
+   "index": 2
+  },
+  {
+   "at": 56,
+   "kind": "scene-gno"
+  },
+  {
+   "at": 60,
+   "kind": "scene-end"
+  },
+  {
+   "at": 62,
+   "kind": "continued"
+  },
+  {
+   "at": 64,
+   "kind": "mark-leave",
+   "side": "no",
+   "index": 17
+  },
+  {
+   "at": 64.125,
+   "kind": "mark-leave",
+   "side": "no",
+   "index": 16
+  },
+  {
+   "at": 64.25,
+   "kind": "mark-leave",
+   "side": "no",
+   "index": 15
+  },
+  {
+   "at": 64.375,
+   "kind": "mark-leave",
+   "side": "no",
+   "index": 14
+  },
+  {
+   "at": 64.5,
+   "kind": "mark-leave",
+   "side": "no",
+   "index": 13
+  },
+  {
+   "at": 64.625,
+   "kind": "mark-leave",
+   "side": "no",
+   "index": 12
+  },
+  {
+   "at": 64.75,
+   "kind": "mark-leave",
+   "side": "no",
+   "index": 11
+  },
+  {
+   "at": 64.875,
+   "kind": "mark-leave",
+   "side": "yes",
+   "index": 10
+  },
+  {
+   "at": 65,
+   "kind": "mark-leave",
+   "side": "yes",
+   "index": 9
+  },
+  {
+   "at": 65.125,
+   "kind": "mark-leave",
+   "side": "yes",
+   "index": 8
+  },
+  {
+   "at": 65.25,
+   "kind": "mark-leave",
+   "side": "yes",
+   "index": 7
+  },
+  {
+   "at": 65.375,
+   "kind": "mark-leave",
+   "side": "yes",
+   "index": 6
+  },
+  {
+   "at": 65.5,
+   "kind": "mark-leave",
+   "side": "yes",
+   "index": 5
+  },
+  {
+   "at": 65.625,
+   "kind": "mark-leave",
+   "side": "yes",
+   "index": 4
+  },
+  {
+   "at": 65.75,
+   "kind": "mark-leave",
+   "side": "yes",
+   "index": 3
+  },
+  {
+   "at": 65.875,
+   "kind": "mark-leave",
+   "side": "yes",
+   "index": 2
+  },
+  {
+   "at": 66,
+   "kind": "mark-leave",
+   "side": "yes",
+   "index": 1
+  },
+  {
+   "at": 66.125,
+   "kind": "mark-leave",
+   "side": "yes",
+   "index": 0
+  }
+ ]
+}

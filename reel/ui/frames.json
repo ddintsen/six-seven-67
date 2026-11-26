@@ -1,0 +1,44 @@
+{
+ "ticket": {
+  "width": 368,
+  "height": 662,
+  "press": {
+   "x": 26,
+   "y": 514,
+   "width": 316,
+   "height": 52
+  }
+ },
+ "review": {
+  "width": 560,
+  "height": 574,
+  "press": {
+   "x": 372,
+   "y": 498,
+   "width": 160,
+   "height": 48
+  }
+ },
+ "confirmed": {
+  "width": 560,
+  "height": 605
+ },
+ "position": {
+  "width": 430,
+  "height": 205,
+  "press": {
+   "x": 223,
+   "y": 145,
+   "width": 147,
+   "height": 44
+  }
+ },
+ "claimed": {
+  "width": 430,
+  "height": 184
+ },
+ "claimed-status": {
+  "width": 398,
+  "height": 65
+ }
+}

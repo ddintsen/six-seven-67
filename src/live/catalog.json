@@ -1,0 +1,217 @@
+{
+  "btc-vs-gold-2026": {
+    "category": "Crypto",
+    "conditionId": "0xdcae9573d5680a2c958cca4676ed28df7a06861572124f3396cc60ab6b92b9c2",
+    "eventSlug": "will-bitcoin-outperform-gold-in-2026"
+  },
+  "starship-reusable-2026": {
+    "category": "Science",
+    "conditionId": "0x0a1b551058f78174cf64ed9d61edb103a76c4df88232ee1188dbc9e390896e7d",
+    "eventSlug": "spacex-starship-fully-reusable-before-2027"
+  },
+  "apple-new-line-2026": {
+    "category": "Technology",
+    "conditionId": "0x0a84cdeb03a25ae441697191edbcc31ad6803c3f4d48af2e0429952336c04fc1",
+    "eventSlug": "will-apple-release-a-new-product-line-before-2027"
+  },
+  "fed-hike-2026": {
+    "category": "Economy",
+    "conditionId": "0x9b1a03b41a1a68c209e9c3caf3d8af3f878420d6dbe8cb8afffd66049e73b114",
+    "eventSlug": "another-fed-rate-hike-in-2026"
+  },
+  "texas-senate-democrats-2026": {
+    "category": "Politics",
+    "conditionId": "0x34918035a590555ba1fb1d6a019d766ab6e557d63e7f3140b63b4550eee7f417",
+    "eventSlug": "texas-senate-election-winner"
+  },
+  "maine-senate-republicans-2026": {
+    "category": "Politics",
+    "conditionId": "0x2c00cb09722a0f0501c5e49131b898ed57bb5c075db4dc2bcbc14908f45b8c48",
+    "eventSlug": "maine-senate-election-winner"
+  },
+  "ohio-senate-democrats-2026": {
+    "category": "Politics",
+    "conditionId": "0x968a1a79e001d49fa3ee1429e3b95eb01797587740f86d4e6becf3ab1b275bfb",
+    "eventSlug": "ohio-senate-election-winner"
+  },
+  "alaska-senate-sullivan-2026": {
+    "category": "Politics",
+    "conditionId": "0x741bb46008b72234857c5118c8365ab3c2f69dbf28b30b59de04f173b8a778de",
+    "eventSlug": "alaska-senate-election-winner"
+  },
+  "nevada-governor-democrats-2026": {
+    "category": "Politics",
+    "conditionId": "0x707eb5c6df23e32e0b770dd0ccd1245abb7fac0dcfd24d8b68dd99e5ca737180",
+    "eventSlug": "nevada-governor-winner-2026"
+  },
+  "texas-governor-democrats-2026": {
+    "category": "Politics",
+    "conditionId": "0x12b727031b38130d945b3e164386874360d9a32fdd7e3d00ed2adb13857e089b",
+    "eventSlug": "texas-governor-winner-2026"
+  },
+  "ohio-governor-democrats-2026": {
+    "category": "Politics",
+    "conditionId": "0x3babe91f8d2fac44027f9ba7f0f1a59e61b72419828e6e517f96bbcf4e132498",
+    "eventSlug": "ohio-governor-winner-2026"
+  },
+  "montana-01-house-democrats-2026": {
+    "category": "Politics",
+    "conditionId": "0xe0fbb3e61e61b14f5fef15ffdd0e2a0c6cf4336bb5b15877fe3e3c9fdcc6bc7f",
+    "eventSlug": "mt-01-house-election-winner"
+  },
+  "trump-cabinet-unchanged-2026": {
+    "category": "Politics",
+    "conditionId": "0x50f740162f52bcef8c8035e5b175c7ad6f5230b7ffbed4cbd5733ff93fc91168",
+    "eventSlug": "who-will-be-the-next-to-leave-the-trump-cabinet-474"
+  },
+  "scotus-event-contracts-2026": {
+    "category": "Politics",
+    "conditionId": "0x68e2344a2ce725ca99f3b93df06f27a71f3a893a38e8a6a78f8d85bd2698eb20",
+    "eventSlug": "scotus-accepts-sports-event-contract-case-by-july-31-2026"
+  },
+  "le-pen-president-2027": {
+    "category": "World",
+    "conditionId": "0x8126317d621047fb13d508a2651eecc8d38305904671822a62309c5aabd353aa",
+    "eventSlug": "next-french-presidential-election"
+  },
+  "milei-president-2027": {
+    "category": "World",
+    "conditionId": "0x338f6f3e5ff30f189a7228290a66b9a4213722032da364c8635b496589ddfd3b",
+    "eventSlug": "argentina-presidential-election-winner"
+  },
+  "spain-election-pp-2026": {
+    "category": "World",
+    "conditionId": "0x162e356bfab7ad18fe4e3029d5811d9a95fce95d93858b42924a3b9ffbcf1a93",
+    "eventSlug": "spain-general-election-winner"
+  },
+  "sanchez-out-2026": {
+    "category": "World",
+    "conditionId": "0x890f9b8de730479549e95027f26aad5ce89ecc4a42a6fd6316d0b0aec9a5aad1",
+    "eventSlug": "pedro-snchez-out-as-pm-of-spain-by"
+  },
+  "trump-kim-meeting-2026": {
+    "category": "World",
+    "conditionId": "0xb5395470c9b87f5ae8ffc719c1376aa89b493adf083e01cb8064e683fbaa18fc",
+    "eventSlug": "who-will-trump-meet-with-in-2026"
+  },
+  "taiwan-local-kmt-2026": {
+    "category": "World",
+    "conditionId": "0xc0f076bc4d90a44df34a729277e9d1f294f0cb60d2c3b1b3800908b1e15b923b",
+    "eventSlug": "2026-taiwanese-local-elections-party-winner"
+  },
+  "taipei-mayor-shen-2026": {
+    "category": "World",
+    "conditionId": "0x910aabbfae28b3569929c31fb5461f4db13f7ddd427bdee1e696d313125838e3",
+    "eventSlug": "taipei-mayor-election-winner-20260813125857100"
+  },
+  "fed-upper-bound-425-2026": {
+    "category": "Economy",
+    "conditionId": "0x16dd5e4c4bfa3f3095c3ff0def4bed556eba411e3cdbf7b463b3b9a74c1d93a4",
+    "eventSlug": "what-will-the-fed-rate-be-at-the-end-of-2026"
+  },
+  "fed-two-hikes-2026": {
+    "category": "Economy",
+    "conditionId": "0xff8ae213f43c3c61299bafb0b153b45d6e112f515601b71b59816de6908321f4",
+    "eventSlug": "how-many-fed-rate-hikes-in-2026-20260623190717369"
+  },
+  "us-inflation-above-45-2026": {
+    "category": "Economy",
+    "conditionId": "0xf4a457c3a455917897fd89aa7d1cea256a8b325eded3c05c7ff771c948fbeaad",
+    "eventSlug": "how-high-will-inflation-get-in-2026"
+  },
+  "bitcoin-90k-2026": {
+    "category": "Crypto",
+    "conditionId": "0xbb379a14cd03f68c35c279ddbd928a6326f4fd2e21827f8cdaaf59715d6df50e",
+    "eventSlug": "what-price-will-bitcoin-hit-before-2027"
+  },
+  "ethereum-dips-2250-2026": {
+    "category": "Crypto",
+    "conditionId": "0x99a1879635bc8873891cc472d5e39ca0efaf2017c562ae244810747a7f8edbd5",
+    "eventSlug": "what-price-will-ethereum-hit-before-2027"
+  },
+  "hyperliquid-100-2026": {
+    "category": "Crypto",
+    "conditionId": "0xeae133a71045c94ab57717d3f4aab62758e2a915a27f9606e383024975264467",
+    "eventSlug": "what-price-will-hyperliquid-hit-before-2027"
+  },
+  "solana-140-2026": {
+    "category": "Crypto",
+    "conditionId": "0x8b2c465928dfda7a0decfb93bc4bbd60e067a6c57016d678dd97c49ba76f3bdd",
+    "eventSlug": "what-price-will-solana-hit-before-2027"
+  },
+  "predict-fun-token-2026": {
+    "category": "Crypto",
+    "conditionId": "0x95feddfb444684affe3347fbe3c5af37092a6315ba2b389dc187ad5661527d0a",
+    "eventSlug": "will-predictfun-launch-a-token-by"
+  },
+  "openai-millennium-prize-2026": {
+    "category": "Technology",
+    "conditionId": "0x117f9132e15eeff2621be398fa57092cf446a2f02cbd7ee8e3714226705c4d3b",
+    "eventSlug": "openai-announces-another-millennium-prize-solution-by"
+  },
+  "tesla-spacex-merger-2026": {
+    "category": "Technology",
+    "conditionId": "0x85647246dede70416c9c71ea851d87facf4b5efe58c685f4acc5ea94a9487c10",
+    "eventSlug": "tesla-and-spacex-merger-officially-announced-by-june-30"
+  },
+  "james-bond-lowden": {
+    "category": "Culture",
+    "conditionId": "0x490b4abcc5b23958f5515716fbab843574f9cffef4bc52eac3a3939809757b46",
+    "eventSlug": "next-james-bond-actor-398"
+  },
+  "oscars-odyssey-best-picture": {
+    "category": "Culture",
+    "conditionId": "0x5d554b8061faaf973115ad48859a04096cd3525873c730964ac7526076315c29",
+    "eventSlug": "oscars-2027-best-picture-winner-20260727173620857"
+  },
+  "billboard-wallen-2026": {
+    "category": "Culture",
+    "conditionId": "0x45645b3996c6170c477de5f81a04da30d0df6ebf01acb155733aed37458497c2",
+    "eventSlug": "billboard-1-artist-2026"
+  },
+  "avengers-doomsday-opening-2026": {
+    "category": "Culture",
+    "conditionId": "0xa05d8a684b40450d2b8a8fdf07df0b50089de97f675bb4489ffa81b00abb60c4",
+    "eventSlug": "which-movie-has-biggest-opening-week-in-2026"
+  },
+  "spotify-djo-top-song-2026": {
+    "category": "Culture",
+    "conditionId": "0xe2e548cb9997dd0c6349f0e4562bbf560f399787a377c1144e70782335afe3cf",
+    "eventSlug": "top-song-2026-20260714195249188"
+  },
+  "ballon-dor-kane-2026": {
+    "category": "Sports",
+    "conditionId": "0x12dc2b61723b2a54fc1947a307389b5f32038e7a29a0e936ad1fe410b969d06a",
+    "eventSlug": "ballon-dor-winner-2026"
+  },
+  "premier-league-arsenal-2027": {
+    "category": "Sports",
+    "conditionId": "0xf02d8d72bb96d84090d4f7d63e7837afb94f8d061e7a2cca8cf21732150e8815",
+    "eventSlug": "epl-2027-champion-20260701200428749"
+  },
+  "champions-league-barcelona-2027": {
+    "category": "Sports",
+    "conditionId": "0xa23467e95abf6544819a9dcb90b7719846aacf300b991ea07204e1f1649097cb",
+    "eventSlug": "uefa-champions-league-2027-champion-20260701202025549"
+  },
+  "ligue-1-psg-2027": {
+    "category": "Sports",
+    "conditionId": "0x2cf1d3add82128e953811f4412f6e0f34776fe3c4b60f4f4b8b61ef3b7745b28",
+    "eventSlug": "ligue-1-2027-champion-20260701201053335"
+  },
+  "super-bowl-49ers-2027": {
+    "category": "Sports",
+    "conditionId": "0x6099e6b30c4ee1d3121e5ebe4760ebff446ec5d7eef1b9c43dd2e9cfd59a556c",
+    "eventSlug": "pro-football-2027-champion-20260729185915366"
+  },
+  "nba-finals-spurs-2027": {
+    "category": "Sports",
+    "conditionId": "0x9b9c693020bd625462107ea7963bacfefe73e678dd0e001c2d11388395a3cc2e",
+    "eventSlug": "nba-2027-champion"
+  },
+  "stanley-cup-avalanche-2027": {
+    "category": "Sports",
+    "conditionId": "0x4837fae2b39802b08f8abc4d557a22355efad89083328d2cc81f8d0b2b11a280",
+    "eventSlug": "nhl-2027-champion-20260612185656162"
+  }
+}

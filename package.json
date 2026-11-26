@@ -1,0 +1,36 @@
+{
+  "name": "67-prediction-exchange",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 6767",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 6767",
+    "test": "node --experimental-strip-types --test src/adena.test.ts src/live/gno.test.ts server/gateway.test.mjs server/resolution-proposal.test.mjs src/live/oracle.test.ts src/live/gamma.test.ts src/live/listing.test.ts src/live/freshness.test.ts ops/robot/robot.test.ts",
+    "backend": "node server/index.mjs",
+    "backend:smoke": "node server/smoke-live.mjs",
+    "qa:e2e": "playwright test",
+    "oracle:propose": "node server/propose-resolution.mjs"
+  },
+  "dependencies": {
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@gnolang/gno-js-client": "^3.1.0",
+    "@gnolang/tm2-js-client": "^3.3.0",
+    "@playwright/test": "1.64.0",
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/three": "0.186.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "esbuild": "^0.28.2",
+    "typescript": "7.0.2",
+    "vite": "8.3.4"
+  }
+}

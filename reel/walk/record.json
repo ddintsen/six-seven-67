@@ -1,0 +1,98 @@
+{
+ "fps": 30,
+ "frames": 1560,
+ "cues": [
+  {
+   "t": 6,
+   "kind": "cut"
+  },
+  {
+   "t": 6.6,
+   "kind": "press"
+  },
+  {
+   "t": 9.5,
+   "kind": "press"
+  },
+  {
+   "t": 9.5,
+   "kind": "cut"
+  },
+  {
+   "t": 14,
+   "kind": "cut"
+  },
+  {
+   "t": 14.267,
+   "kind": "press"
+  },
+  {
+   "t": 15.1,
+   "kind": "press"
+  },
+  {
+   "t": 16.1,
+   "kind": "press"
+  },
+  {
+   "t": 17,
+   "kind": "press"
+  },
+  {
+   "t": 17.767,
+   "kind": "press"
+  },
+  {
+   "t": 18.5,
+   "kind": "press"
+  },
+  {
+   "t": 18.8,
+   "kind": "key"
+  },
+  {
+   "t": 20.6,
+   "kind": "press"
+  },
+  {
+   "t": 22,
+   "kind": "press"
+  },
+  {
+   "t": 23,
+   "kind": "confirmed"
+  },
+  {
+   "t": 25.4,
+   "kind": "press"
+  },
+  {
+   "t": 26,
+   "kind": "cut"
+  },
+  {
+   "t": 27,
+   "kind": "press"
+  },
+  {
+   "t": 27.4,
+   "kind": "confirmed"
+  },
+  {
+   "t": 30,
+   "kind": "cut"
+  },
+  {
+   "t": 31.5,
+   "kind": "press"
+  },
+  {
+   "t": 32.1,
+   "kind": "confirmed"
+  },
+  {
+   "t": 36,
+   "kind": "cut"
+  }
+ ]
+}

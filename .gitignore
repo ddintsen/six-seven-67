@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.qa/
+test-results/
+playwright-report/
+.env*
+deploy/
+history/
+previews/
+__pycache__/
+
+# Recorded layers of the walkthrough film (regenerate with reel/walk/build.sh)
+reel/walk/out/
+
+# The first walkthrough's screens and film, kept on disk only
+_to_delete/walkthrough-v1/shots/
+_to_delete/walkthrough-v1/*.mp4

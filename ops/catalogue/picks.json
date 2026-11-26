@@ -1,0 +1,232 @@
+{
+  "note": "The markets chosen for listing on 15 October 2026 from the verified pool (select.ts --pool). Each pick is a condition-ID prefix or a question fragment, with the topic 67 shows. US elections are Politics, other countries World. Markets about Anthropic were left out, as were war-related ones. closesAtUtc overrides the generic rule where the event has a known date (checked 15 October 2026; the Ballon d'Or ceremony date from beIN Sports).",
+  "picks": [
+    {
+      "match": "0x34918035a5",
+      "topic": "Politics",
+      "id": "texas-senate-democrats-2026"
+    },
+    {
+      "match": "0x2c00cb0972",
+      "topic": "Politics",
+      "id": "maine-senate-republicans-2026"
+    },
+    {
+      "match": "0x968a1a79e0",
+      "topic": "Politics",
+      "id": "ohio-senate-democrats-2026"
+    },
+    {
+      "match": "0x741bb46008",
+      "topic": "Politics",
+      "id": "alaska-senate-sullivan-2026"
+    },
+    {
+      "match": "0x707eb5c6df",
+      "topic": "Politics",
+      "id": "nevada-governor-democrats-2026"
+    },
+    {
+      "match": "0x12b727031b",
+      "topic": "Politics",
+      "id": "texas-governor-democrats-2026"
+    },
+    {
+      "match": "0x3babe91f8d",
+      "topic": "Politics",
+      "id": "ohio-governor-democrats-2026"
+    },
+    {
+      "match": "0xe0fbb3e61e",
+      "topic": "Politics",
+      "id": "montana-01-house-democrats-2026"
+    },
+    {
+      "match": "0x50f740162f",
+      "topic": "Politics",
+      "id": "trump-cabinet-unchanged-2026"
+    },
+    {
+      "match": "0x68e2344a2c",
+      "topic": "Politics",
+      "id": "scotus-event-contracts-2026"
+    },
+    {
+      "match": "0x8126317d62",
+      "topic": "World",
+      "id": "le-pen-president-2027",
+      "closesAtUtc": "2027-04-01T00:00:00Z",
+      "closesAtReason": "The first round is expected in April 2027; trading closes on 1 April."
+    },
+    {
+      "match": "0x338f6f3e5f",
+      "topic": "World",
+      "id": "milei-president-2027",
+      "closesAtUtc": "2027-10-24T06:00:00Z",
+      "closesAtReason": "Before the polls open on 24 October 2027."
+    },
+    {
+      "match": "0x162e356bfa",
+      "topic": "World",
+      "id": "spain-election-pp-2026",
+      "closesAtUtc": "2026-11-28T23:00:00Z",
+      "closesAtReason": "Before the polls open on 29 November 2026."
+    },
+    {
+      "match": "0x890f9b8de7",
+      "topic": "World",
+      "id": "sanchez-out-2026"
+    },
+    {
+      "match": "0xb5395470c9",
+      "topic": "World",
+      "id": "trump-kim-meeting-2026"
+    },
+    {
+      "match": "0xc0f076bc4d",
+      "topic": "World",
+      "id": "taiwan-local-kmt-2026",
+      "closesAtUtc": "2026-11-27T22:00:00Z",
+      "closesAtReason": "Before the polls open on 28 November 2026 (08:00 in Taiwan)."
+    },
+    {
+      "match": "0x910aabbfae",
+      "topic": "World",
+      "id": "taipei-mayor-shen-2026",
+      "closesAtUtc": "2026-11-27T22:00:00Z",
+      "closesAtReason": "Before the polls open on 28 November 2026 (08:00 in Taiwan)."
+    },
+    {
+      "match": "0x16dd5e4c4b",
+      "topic": "Economy",
+      "id": "fed-upper-bound-425-2026"
+    },
+    {
+      "match": "0xff8ae213f4",
+      "topic": "Economy",
+      "id": "fed-two-hikes-2026"
+    },
+    {
+      "match": "0xf4a457c3a4",
+      "topic": "Economy",
+      "id": "us-inflation-above-45-2026"
+    },
+    {
+      "match": "0xbb379a14cd",
+      "topic": "Crypto",
+      "id": "bitcoin-90k-2026"
+    },
+    {
+      "match": "0x99a1879635",
+      "topic": "Crypto",
+      "id": "ethereum-dips-2250-2026"
+    },
+    {
+      "match": "Will Hyperliquid reach $100 by December 31, 2026?",
+      "topic": "Crypto",
+      "id": "hyperliquid-100-2026"
+    },
+    {
+      "match": "Will Solana reach $140 by December 31, 2026?",
+      "topic": "Crypto",
+      "id": "solana-140-2026"
+    },
+    {
+      "match": "0x95feddfb44",
+      "topic": "Crypto",
+      "id": "predict-fun-token-2026"
+    },
+    {
+      "match": "0x117f9132e1",
+      "topic": "Technology",
+      "id": "openai-millennium-prize-2026"
+    },
+    {
+      "match": "0x85647246de",
+      "topic": "Technology",
+      "id": "tesla-spacex-merger-2026"
+    },
+    {
+      "match": "0x490b4abcc5",
+      "topic": "Culture",
+      "id": "james-bond-lowden"
+    },
+    {
+      "match": "0x5d554b8061",
+      "topic": "Culture",
+      "id": "oscars-odyssey-best-picture",
+      "closesAtUtc": "2027-01-21T12:00:00Z",
+      "closesAtReason": "Before the nominations on 21 January 2027; a film that is not nominated resolves No at once."
+    },
+    {
+      "match": "0x45645b3996",
+      "topic": "Culture",
+      "id": "billboard-wallen-2026",
+      "closesAtUtc": "2026-11-15T00:00:00Z",
+      "closesAtReason": "Before Billboard publishes its year-end charts."
+    },
+    {
+      "match": "0xa05d8a684b",
+      "topic": "Culture",
+      "id": "avengers-doomsday-opening-2026",
+      "closesAtUtc": "2026-12-17T23:00:00Z",
+      "closesAtReason": "Before Avengers: Doomsday opens on 18 December 2026."
+    },
+    {
+      "match": "0xe2e548cb99",
+      "topic": "Culture",
+      "id": "spotify-djo-top-song-2026",
+      "closesAtUtc": "2026-11-30T00:00:00Z",
+      "closesAtReason": "Before Spotify Wrapped, usually published in early December."
+    },
+    {
+      "match": "0x12dc2b6172",
+      "topic": "Sports",
+      "id": "ballon-dor-kane-2026",
+      "closesAtUtc": "2026-10-26T06:00:00Z",
+      "closesAtReason": "Before the ceremony in London on 26 October 2026."
+    },
+    {
+      "match": "0xf02d8d72bb",
+      "topic": "Sports",
+      "id": "premier-league-arsenal-2027",
+      "closesAtUtc": "2027-05-01T00:00:00Z",
+      "closesAtReason": "A month before the last matchday; the title can be decided earlier."
+    },
+    {
+      "match": "0xa23467e95a",
+      "topic": "Sports",
+      "id": "champions-league-barcelona-2027",
+      "closesAtUtc": "2027-05-29T12:00:00Z",
+      "closesAtReason": "Before the final on 29 May 2027; elimination resolves No earlier."
+    },
+    {
+      "match": "0x2cf1d3add8",
+      "topic": "Sports",
+      "id": "ligue-1-psg-2027",
+      "closesAtUtc": "2027-05-01T00:00:00Z",
+      "closesAtReason": "Before the last matchdays; the title can be decided earlier."
+    },
+    {
+      "match": "0x6099e6b30c",
+      "topic": "Sports",
+      "id": "super-bowl-49ers-2027",
+      "closesAtUtc": "2027-01-09T00:00:00Z",
+      "closesAtReason": "Before the playoffs begin; elimination resolves No earlier."
+    },
+    {
+      "match": "0x9b9c693020",
+      "topic": "Sports",
+      "id": "nba-finals-spurs-2027",
+      "closesAtUtc": "2027-04-17T00:00:00Z",
+      "closesAtReason": "Before the playoffs begin; elimination resolves No earlier."
+    },
+    {
+      "match": "0x4837fae2b3",
+      "topic": "Sports",
+      "id": "stanley-cup-avalanche-2027",
+      "closesAtUtc": "2027-04-17T00:00:00Z",
+      "closesAtReason": "Before the playoffs begin; elimination resolves No earlier."
+    }
+  ]
+}
