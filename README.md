@@ -20,6 +20,8 @@ The markets are independent positions on Gno.land. Polymarket supplies reference
 | Markets v2 | [contracts/v2](contracts/v2) | [Markets v2 on Onyx](https://onyx.testnets.gno.land/r/nym-sixseven067/markets/v2) |
 | Gnoweb home | [contracts/home](contracts/home) | [67 on Onyx](https://onyx.testnets.gno.land/r/nym-sixseven067/home) |
 
+[Verify Onyx receipts](docs/ONYX-EVIDENCE.md) for an executed purchase, oracle finality, and a voided market.
+
 The frontend reads both market realms. V2 adds expiring two-sided quotes, per-market limits, a resolution dispute window, and refunds for void markets.
 
 ## Run
