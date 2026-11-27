@@ -201,13 +201,17 @@ export default function TestnetTicket({ market, outcome, onOutcome, onOpenWallet
     return (
       <aside id="trade-panel" className="ticket ticket-closed" aria-labelledby="trade-heading">
         <div className="ticket-head">
-          <h2 id="trade-heading" tabIndex={-1}>{chain.finalized ? 'Result' : chain.state === 'proposed' ? 'Result proposed' : market.trading === 'paused' ? 'Trading paused' : expired ? 'Price expired' : 'Trading closed'}</h2>
+          <h2 id="trade-heading" tabIndex={-1}>{chain.finalized ? 'Result' : market.readOnly ? 'Earlier contract' : chain.state === 'proposed' ? 'Result proposed' : market.trading === 'paused' ? 'Trading paused' : expired ? 'Price expired' : 'Trading closed'}</h2>
           <p className="ticket-venue"><span className="venue-mark testnet">{CHAIN.chainName}</span></p>
         </div>
         {chain.finalized && chain.outcome === 'Void'
           ? <p className="ticket-closed-line">The market is void. Every holder takes back what they paid, the fee included.</p>
           : chain.finalized
             ? <p className="ticket-closed-line"><span className={chain.winner === 'Yes' ? 'yes-text' : 'no-text'}>{chain.winner && name(chain.winner)}</span> won. Each {chain.winner && name(chain.winner)} share pays 1 GNOT from this market’s collateral.</p>
+            : market.readOnly
+              ? <p className="ticket-closed-line">{market.trading === 'open'
+                ? 'This market is on Markets v1, 67’s first contract. Its quotes do not expire, so it is read only here. Current markets trade on Markets v2, where every price expires within a day.'
+                : 'This market is on Markets v1, 67’s first contract, and read only here. Its oracle records the result once Polymarket settles it.'}</p>
             : chain.state === 'proposed'
               ? <p className="ticket-closed-line">The oracle proposed <span className={chain.outcome === 'Yes' ? 'yes-text' : chain.outcome === 'No' ? 'no-text' : ''}>{chain.outcome === 'Yes' || chain.outcome === 'No' ? name(chain.outcome) : chain.outcome}</span>. Anyone can make it final from {formatDayTime(chain.proposedAt + DISPUTE_WINDOW)} unless the guardian cancels it first.</p>
               : market.trading === 'paused'
@@ -216,6 +220,7 @@ export default function TestnetTicket({ market, outcome, onOutcome, onOpenWallet
                   ? <p className="ticket-closed-line">The last price is older than the contract accepts. Trading resumes when the next quote is published.</p>
                   : <p className="ticket-closed-line">Trading has closed. The result is recorded here by the market’s oracle once Polymarket settles it.</p>}
         {chain.finalized && <a className="button primary block" href="#/portfolio">{chain.outcome === 'Void' ? 'Take your refund in Portfolio' : 'Claim in Portfolio'}</a>}
+        {!chain.finalized && market.readOnly && <a className="button block" href="#/markets">See open markets</a>}
       </aside>
     );
   }

@@ -24,10 +24,11 @@ async function withV2(page: Page, markets: Parameters<typeof v2Market>[] = [['se
 test('a v2 market lists beside v1 and a purchase sends cost plus the fee to realm v2', async ({ page }) => {
   const { chain, v2 } = await withV2(page);
   await page.goto('/#/markets');
-  const row = page.getByRole('article').filter({ hasText: senate });
+  // The only v2 market that trades leads the page.
+  const row = page.locator('.lead').filter({ hasText: senate });
   await expect(row.getByRole('link', { name: 'Yes 0.42', exact: true })).toBeVisible({ timeout: 15_000 });
   await expect(row.getByRole('link', { name: 'No 0.60', exact: true })).toBeVisible();
-  await expect(page.getByText('5 markets on the 67 contract, priced in test GNOT.')).toBeVisible();
+  await expect(page.getByText('5 markets across Markets v1 and v2, priced in test GNOT.')).toBeVisible();
 
   await page.goto('/#/market/senate-2026');
   await connectAdena(page);
@@ -49,6 +50,41 @@ test('a v2 market lists beside v1 and a purchase sends cost plus the fee to real
   await expect(dialog(page, 'Position confirmed').getByRole('status')).toHaveText('The contract shows your new position.', { timeout: 20_000 });
   expect(chain.calls).toEqual([{ func: 'Buy', args: ['senate-2026', 'Yes', '2326966', '420000'], send: '1000000ugnot', realm: 'v2' }]);
   expect(v2.position(ADDRESS, 'senate-2026')).toEqual({ yes: 2_326_966n, no: 0n, spent: 977_326n, fee: 22_674n });
+});
+
+test('with Markets v2 the lead is a v2 market with a live quote and v1 is the earlier contract, read only', async ({ page }) => {
+  await withV2(page);
+  await page.goto('/#/markets');
+  await expect(page.locator('#lead-question')).toHaveText(senate, { timeout: 15_000 });
+  const earlier = page.getByRole('region', { name: /Earlier contract/ });
+  await expect(earlier.getByText(/Markets v1, 67’s first contract on Onyx testnet, kept for its record./)).toBeVisible();
+  const bitcoin = earlier.getByRole('article').filter({ hasText: 'Will Bitcoin outperform Gold in 2026?' });
+  await expect(bitcoin.getByText('Read only', { exact: true })).toBeVisible();
+  await expect(earlier.getByRole('link', { name: /^(Yes|No) d/ })).toHaveCount(0);
+  // No other v2 market, so no list of current questions under the lead.
+  await expect(page.locator('#more-questions')).toHaveCount(0);
+
+  // A v1 market page explains itself instead of offering a purchase.
+  await page.goto('/#/market/btc-vs-gold-2026');
+  await expect(panel(page).getByRole('heading', { name: 'Earlier contract' })).toBeVisible({ timeout: 15_000 });
+  await expect(panel(page).getByText(/This market is on Markets v1, 67’s first contract. Its quotes do not expire, so it is read only here./)).toBeVisible();
+  await expect(panel(page).getByRole('link', { name: 'See open markets' })).toHaveAttribute('href', '#/markets');
+  await expect(page.getByRole('button', { name: 'Review trade' })).toHaveCount(0);
+  await expect(page.locator('.trade-bar')).toHaveCount(0);
+  await expect(value(page.locator('.status-grid'), 'Trading')).toHaveText('Read only, on the earlier contract');
+  const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+  expect(results.violations).toEqual([]);
+});
+
+test('with no v2 market open, the list says so and features nothing stale', async ({ page }) => {
+  await withV2(page, [['expired-2026', 'Will the quote expire?', '0x' + '7'.repeat(64), ADDRESS, { quotedAt: MOCK_NOW - 7200 }]]);
+  await page.goto('/#/markets');
+  await expect(page.getByRole('heading', { name: 'No market is open for trading right now' })).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator('#lead-question')).toHaveCount(0);
+  await expect(page.getByRole('article').filter({ hasText: 'Will the quote expire?' }).getByText('Quote unavailable', { exact: true })).toBeVisible();
+  await page.goto('/#/');
+  await expect(page.getByText('No market is open for trading right now', { exact: true })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole('heading', { name: 'Open on Onyx testnet' })).toHaveCount(0);
 });
 
 test('paused, expired, proposed and void markets explain themselves, and a void position is refunded with its fee', async ({ page }) => {

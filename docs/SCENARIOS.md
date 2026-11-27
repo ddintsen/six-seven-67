@@ -100,3 +100,13 @@ Scenario 41 runs in `e2e/site.spec.ts`.
 | The lead market on the list | The same line under its price | `e2e/freshness.spec.ts` |
 | The connected account is the oracle of two or more settled markets | "Sign all N in Adena" signs every result in one transaction | `e2e/status.spec.ts` |
 | Someone claims their last v2 position (or has purchases on record and nothing open) | "Nothing open right now", pointing to Activity, instead of the first-visit state | `e2e/v2.spec.ts` |
+
+## Current and earlier contract (November 27, 2026)
+
+| Scenario | Expected behaviour | Covered by |
+| --- | --- | --- |
+| Markets v2 is configured and a v2 market has a live quote | It leads the Markets page; v1 markets follow under "Earlier contract", each reading "Read only" | `e2e/v2.spec.ts` |
+| A v1 market page while v2 is configured | The closed panel "Earlier contract" with "See open markets"; no trade form and no trade bar; Trading reads "Read only, on the earlier contract"; claims stay in Portfolio | `e2e/v2.spec.ts` |
+| No v2 market can be bought now | "No market is open for trading right now" and nothing featured; Home says so under the balance and hides "Open on Onyx testnet" | `e2e/v2.spec.ts` |
+| Only v1 is configured (a v1-only build) | v1 markets trade as before | `e2e/testnet.spec.ts` |
+

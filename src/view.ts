@@ -32,6 +32,10 @@ export interface MarketView {
   limit: Record<Outcome, string>;
   chain: ChainMarket;
   sourceLink: string | null;
+  // Markets v1 once Markets v2 is configured (production): v1's quotes never
+  // expire and its Buy checks no quote age, so the app shows these markets and
+  // their claims but sells only on v2 (Gnome Tavern review, 27 November 2026).
+  readOnly: boolean;
 }
 
 export function fromChain(market: ChainMarket, now: number): MarketView {
@@ -59,6 +63,7 @@ export function fromChain(market: ChainMarket, now: number): MarketView {
     limit: { Yes: formatUgnot(yes.costUgnot, 2), No: formatUgnot(no.costUgnot, 2) },
     chain: market,
     sourceLink: meta ? `https://polymarket.com/event/${meta.eventSlug}` : null,
+    readOnly: market.version === 1 && CHAIN.realmV2 !== null,
   };
 }
 
@@ -77,7 +82,7 @@ export function stateLabel(market: MarketView): string {
 }
 
 export function canTrade(market: MarketView): boolean {
-  return market.trading === 'open' && market.source === 'awaiting' && market.quoteAvailable;
+  return !market.readOnly && market.trading === 'open' && market.source === 'awaiting' && market.quoteAvailable;
 }
 
 export function chainNow(blockTime: number | undefined): number {

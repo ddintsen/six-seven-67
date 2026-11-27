@@ -88,7 +88,7 @@ test('who does what reads the operator and oracle from the realm', async ({ page
   await chain.install(page);
   await page.goto('/#/');
   const section = page.getByRole('region', { name: 'Who does what' });
-  await expect(section.getByRole('img', { name: /Polymarket feeds the operator/ })).toBeVisible();
+  await expect(section.getByRole('img', { name: /The operator publishes quotes, the oracle reports outcomes/ })).toBeVisible();
   await expect(section.getByText(/g1z86x…uw9q, last quote/)).toBeVisible({ timeout: 15000 });
   await expect(section.getByText('g1jg8m…sqf5, 1 of 4 final')).toBeVisible({ timeout: 15000 });
 });

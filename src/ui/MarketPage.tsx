@@ -211,7 +211,7 @@ export default function MarketPage({ market, backHref, initialOutcome, live, onO
           <section className="detail-section" aria-labelledby="lifecycle-heading">
             <h2 id="lifecycle-heading">Question status</h2>
             <dl className="status-grid">
-              <div><dt>Trading</dt><dd>{market.trading === 'open' ? (market.quoteAvailable ? 'Open' : 'Open, waiting for a new quote') : market.trading === 'paused' ? 'Paused' : 'Closed'}</dd></div>
+              <div><dt>Trading</dt><dd>{market.readOnly && !market.chain.finalized ? 'Read only, on the earlier contract' : market.trading === 'open' ? (market.quoteAvailable ? 'Open' : 'Open, waiting for a new quote') : market.trading === 'paused' ? 'Paused' : 'Closed'}</dd></div>
               <div><dt>Source outcome</dt><dd>{sourceText}</dd></div>
               <div><dt>Payouts</dt><dd>{voided ? 'Refunds open in Portfolio' : market.finalOutcome ? 'Open to claim in Portfolio' : 'After the outcome is finalized'}</dd></div>
             </dl>

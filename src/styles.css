@@ -1109,3 +1109,7 @@ a.activity-time { text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 360px) {
   .portfolio .page-head { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'title' 'note' 'tools'; }
 }
+
+/* The earlier contract (Markets v1): read only, after the current markets. */
+.market-list.earlier { margin-top: 72px; }
+.earlier-note { max-width: 62ch; margin: 0 0 20px; font-size: 14px; color: var(--muted); }
