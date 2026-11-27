@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { LISTING_COST_UGNOT, pickListings, slotLimits, surplusOf, twoSided, v1Moves, v1Price, windowCommitment, type ListingWindow } from './robot.ts';
-import { feeUgnot, gasWanted, ugnotPerGas } from './signer.ts';
+import { MsgCall } from '@gnolang/gno-js-client';
+import { ResponseDeliverTx, Tx, uint8ArrayToBase64, type ABCIResponse, type AbciQueryParams } from '@gnolang/tm2-js-client';
+import { feeUgnot, gasWanted, simulateGas, simulationJudged, SimulationRefused, ugnotPerGas } from './signer.ts';
 import { JUDGING_WINDOW, robotSettings, timeOf } from './settings.ts';
 
 test('a v1 quote is the midpoint to a tenth of a cent, never 0 or 1', () => {
@@ -33,6 +35,40 @@ test('gas comes from the simulation with a margin, and the fee follows the gas',
   assert.equal(ugnotPerGas(null), 0.001);
   assert.equal(feeUgnot(gasWanted(5_474_471), 0.001), 10_605);
   assert.equal(feeUgnot(25_000_000, 0.001), 37_500); // what one quote cost in October
+});
+
+const robotCall = (): Tx => ({
+  messages: [{ type_url: '/vm.m_call', value: MsgCall.encode({ caller: 'g13wgyakt05a202ekc09vk8mgdg9g4gdp6upxuna', send: '', max_deposit: '', pkg_path: 'gno.land/r/nym-sixseven067/markets/v2', func: 'WithdrawSurplus', args: ['nfl-sea-den-2026-10-16'] }).finish() }],
+  fee: { gas_wanted: 10_000_000n, gas_fee: '15000ugnot' }, memo: '', signatures: [],
+});
+// The node's answer to `.app/simulate`, as tm2-js-client reads it.
+const simulated = (deliver: ResponseDeliverTx) => ({
+  response: { ResponseBase: { Error: null, Data: null, Events: null, Log: '', Info: '' }, Key: null, Value: uint8ArrayToBase64(ResponseDeliverTx.encode(deliver).finish()), Proof: null, Height: '0' },
+}) as unknown as ABCIResponse;
+
+test('a simulation sends the transaction bytes once, and returns the gas the call used', async () => {
+  let sent: AbciQueryParams | undefined;
+  const gas = await simulateGas({ abciQuery: async params => { sent = params; return simulated(ResponseDeliverTx.fromPartial({ gas_used: 5_474_471n })); } }, robotCall());
+  assert.equal(gas, 5_474_471);
+  assert.equal(sent?.path, '.app/simulate');
+  // The bytes themselves: tm2-rpc adds the one base64 layer for the JSON-RPC call.
+  // tm2-js-client's estimateGas sent their base64 text, which Onyx cannot decode.
+  assert.deepEqual(sent?.data, Tx.encode(robotCall()).finish());
+  assert.equal(Tx.decode(sent!.data).messages[0].type_url, '/vm.m_call');
+});
+
+test('only a simulation that ran and refused stops a call', async () => {
+  const refusal = await simulateGas({ abciQuery: async () => simulated(ResponseDeliverTx.fromPartial({ response_base: { error: { type_url: '/std.InternalError', value: new Uint8Array() }, log: 'market not found' } })) }, robotCall()).catch((error: unknown) => error);
+  assert.ok(refusal instanceof SimulationRefused);
+  assert.equal(refusal.log, 'market not found');
+  assert.equal(simulationJudged(refusal), true);
+  // What Onyx answered on 27 November to every call simulated by tm2-js-client's estimateGas.
+  const undecoded = { response: { ResponseBase: { Error: { '@type': '/std.TxDecodeError', value: 'unable to decode tx' }, Log: 'unknown field number 8 for Tx' }, Value: null } } as unknown as ABCIResponse;
+  const decode = await simulateGas({ abciQuery: async () => undecoded }, robotCall()).catch((error: unknown) => error);
+  assert.ok(decode instanceof Error);
+  assert.equal(simulationJudged(decode), false);
+  assert.equal(simulationJudged(new SimulationRefused('/std.TxDecodeError', 'unknown field number 8 for Tx')), false);
+  assert.equal(simulationJudged(new TypeError('fetch failed')), false);
 });
 
 const DAY = 86_400;

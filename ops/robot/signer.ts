@@ -7,11 +7,42 @@
 // fee is the gas wanted times the chain's price, paid whatever the call really
 // uses, so the fixed allowances of October (25 million for a quote that uses
 // about 5.5 million) cost the robot four to five times what it needed. A call
-// the realm would refuse fails in the simulation and is never sent, so it
-// costs nothing.
+// the chain refuses in the simulation is never sent, so it costs nothing. A
+// simulation that cannot judge the call (unreachable, or a transaction it could
+// not decode) never stops it: the call goes out with a fixed allowance.
 import { decodeTxMessages, GnoJSONRPCProvider, GnoWallet, MsgCall, MsgSend } from '@gnolang/gno-js-client';
-import { TM2Error, TransactionEndpoint, type Tx } from '@gnolang/tm2-js-client';
+import { extractSimulateFromResponse, TransactionEndpoint, Tx, type ABCIResponse, type AbciQueryParams } from '@gnolang/tm2-js-client';
 import type { Signer } from './robot.ts';
+
+// The chain's own verdict on a simulated transaction.
+export class SimulationRefused extends Error {
+  readonly type: string;
+  readonly log: string;
+  constructor(type: string, log: string) { super(`${type} ${log}`); this.type = type; this.log = log; }
+}
+
+// Runs a signed transaction through `.app/simulate` and returns the gas it used.
+// The query carries the transaction's bytes, and tm2-rpc base64-encodes them for
+// the JSON-RPC call. tm2-js-client's own estimateGas (3.3.0) base64-encodes them
+// once more, so Onyx answers TxDecodeError ("unknown field number 8 for Tx") to
+// every call: the robot deployed on 27 November took that for a refusal and sent
+// nothing.
+export async function simulateGas(provider: { abciQuery(params: AbciQueryParams): Promise<ABCIResponse> }, tx: Tx): Promise<number> {
+  const result = extractSimulateFromResponse(await provider.abciQuery({ path: '.app/simulate', data: Tx.encode(tx).finish(), height: 0, prove: false }));
+  const type = result.response_base?.error?.type_url;
+  if (type) throw new SimulationRefused(type, result.response_base?.log ?? '');
+  return Number(result.gas_used);
+}
+
+// Answers that say nothing about the call itself.
+const UNJUDGED = new Set(['/std.TxDecodeError', '/std.UnknownRequestError']);
+
+// Whether a failed simulation is the chain's verdict on the call. Only a
+// simulation that ran and refused counts; a transport failure or a query the
+// node could not read does not, and the call is sent with the fixed allowance.
+export function simulationJudged(error: unknown): error is SimulationRefused {
+  return error instanceof SimulationRefused && !UNJUDGED.has(error.type);
+}
 
 // The gas a simulation used, plus a fifth and half a million for state that
 // moves between the simulation and the block; never above 100 million.
@@ -57,11 +88,12 @@ export async function walletSigner(rpc: string, mnemonic: string): Promise<Signe
     let gas = fallbackGas;
     try {
       const probe = await wallet.signTransaction(draft(message, fallbackGas), decodeTxMessages, account);
-      gas = gasWanted(Number(await wallet.estimateGas(probe)));
+      const used = await simulateGas(provider, probe);
+      if (Number.isFinite(used) && used > 0) gas = gasWanted(used);
     } catch (error) {
-      // The chain answered and refused: sending would fail the same way and still cost the fee.
-      if (error instanceof TM2Error) throw new Error(`${what} refused in simulation: ${short(error.log || error.message)}`);
-      // The simulation itself could not be reached: send with the fixed allowance.
+      // The chain ran the call and refused it: sending would fail the same way and still cost the fee.
+      if (simulationJudged(error)) throw new Error(`${what} refused in simulation: ${short(error.log || error.message)}`);
+      // The simulation could not judge the call: send it with the fixed allowance.
     }
     const signed = await wallet.signTransaction(draft(message, gas), decodeTxMessages, account);
     const result = await wallet.sendTransaction(signed, TransactionEndpoint.BROADCAST_TX_COMMIT) as Broadcast;
