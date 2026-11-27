@@ -20,6 +20,21 @@
 // a market and never moves money anywhere but into a market it lists or from a
 // final market to its treasury. The realm enforces all of that by role.
 //
+// Money (from 27 November 2026, after the robot ran dry on 23 October: every
+// listing locked a 3 GNOT reserve that returns to the treasury, not to the
+// robot, and fixed gas allowances overpaid every call four to five times). The
+// signer now sizes gas from a simulation; v2's obligations come first in every
+// run (results, then quotes), then listing, then v1's prices and surplus within
+// caps of their own; listing never takes the balance below a floor kept for
+// quotes and results, and a near-term listing never spends what the judging
+// window's listings will need.
+//
+// Listing (Gnome Tavern judging, 18-21 December 2026): matches whose trading
+// ends inside a window are listed with a larger reserve as soon as Polymarket
+// has them, up to a handful; before the window starts, one near-term match is
+// kept open so v2 always has a live market. After the window, the robot lists
+// nothing until a new window is configured (ROBOT_WINDOW_FROM / _TO).
+//
 // Runtime-agnostic: fetch only. The signer is passed in (ops/robot/signer.ts).
 import { fetchMarkets, fetchStatus, qeval, qevalRaw } from '../../src/live/gno.ts';
 import { bindingHash, CLOB_ORIGIN, fetchClob, type ClobRead } from '../../src/live/polymarket.ts';
@@ -49,21 +64,34 @@ export interface RobotOptions {
   // hand-picked (ops/catalogue), because their event can happen before Polymarket's
   // end date. 'all': both.
   listKinds?: 'games' | 'all';
-  maxOpenListed?: number; // stop listing above this many open markets in v2
-  reserveUgnot?: bigint; // collateral each new market starts with
-  minBalanceUgnot?: bigint; // keep at least this much; below it the robot does not list
+  maxOpenListed?: number; // stop listing at this many v2 markets whose trading has not ended
+  reserveUgnot?: bigint; // collateral a near-term listing starts with
+  window?: ListingWindow | null; // matches whose trading ends inside it, listed with their own reserve
+  liveMax?: number; // near-term matches kept open before the window starts
+  minLifeSeconds?: number; // a near-term listing trades at least this long
+  minBalanceUgnot?: bigint; // kept for quotes and results: listing never goes below it, v1 and surplus wait under it
   renewAfterSeconds?: number; // a quote older than this is renewed (the realm's lifetime is longer)
+  v1DriftPpm?: number; // v1 is requoted from this drift (its markets are read-only in the app)
+  v1MaxCalls?: number; // v1 calls per run
+  surplusMaxCalls?: number; // WithdrawSurplus calls per run
   maxCalls?: number; // transactions per run
   deadlineMs?: number; // stop sending after this long
   fetcher?: typeof fetch;
 }
+
+// The judging window: list matches whose trading ends at or after `from` and
+// before `to`, at most `max` open at once, each funded with `reserveUgnot`.
+export interface ListingWindow { from: number; to: number; max: number; reserveUgnot: bigint }
+
+// Storage and gas a listing costs besides its reserve (October: about 1 GNOT).
+export const LISTING_COST_UGNOT = 1_500_000n;
 
 export interface Step { kind: string; market?: string; realm?: string; args?: string[]; sendUgnot?: string; reason: string; ok: boolean; tx?: string; error?: string }
 export interface Report {
   at: string; robot: string; realm: string; dryRun: boolean;
   roles: { quoter: boolean; lister: boolean; administrator: string; oracle?: string; oracleBalanceUgnot?: string };
   v1?: { realm: string; administrator: string; open: number; quoting: boolean };
-  balanceUgnot: string; markets: number; open: number;
+  balanceUgnot: string; markets: number; open: number; tradable: number;
   steps: Step[]; skipped: { what: string; reason: string }[]; errors: string[];
 }
 
@@ -74,8 +102,6 @@ interface RealmInfo {
 }
 
 const BAND = { min: 30_000, max: 970_000 };
-// Gas is cheap on Gno (a thousandth of a ugnot per unit on Onyx), so every call gets generous headroom.
-const GAS = { AcceptRole: 20_000_000, AcceptAdministrator: 20_000_000, ProposeOutcome: 30_000_000, Finalize: 30_000_000, Pause: 20_000_000, SetQuote: 25_000_000, WithdrawSurplus: 30_000_000, CreateMarket: 80_000_000, Fund: 30_000_000 };
 
 async function readRealm(rpc: string, realm: string): Promise<RealmInfo> {
   const v = JSON.parse(await qeval(rpc, realm, 'RealmJSON()')) as Record<string, unknown>;
@@ -120,13 +146,14 @@ async function pool<T, R>(items: T[], limit: number, f: (item: T) => Promise<R>)
 export async function runRobot(signer: Signer, options: RobotOptions): Promise<Report> {
   const started = Date.now();
   const o = {
-    listPerRun: 2, listKinds: 'games' as 'games' | 'all', maxOpenListed: 30, reserveUgnot: 3_000_000n, minBalanceUgnot: 15_000_000n,
-    renewAfterSeconds: 14 * 3600, maxCalls: 40, deadlineMs: 230_000, dryRun: false, fetcher: fetch, ...options,
+    listPerRun: 2, listKinds: 'games' as 'games' | 'all', maxOpenListed: 6, reserveUgnot: 3_000_000n, window: null as ListingWindow | null,
+    liveMax: 1, minLifeSeconds: 2 * 86_400, minBalanceUgnot: 8_000_000n, renewAfterSeconds: 6 * 3600,
+    v1DriftPpm: 20_000, v1MaxCalls: 8, surplusMaxCalls: 6, maxCalls: 40, deadlineMs: 230_000, dryRun: false, fetcher: fetch, ...options,
   };
   const http = o.fetcher;
   const report: Report = {
     at: new Date().toISOString(), robot: signer.address, realm: o.realm, dryRun: o.dryRun,
-    roles: { quoter: false, lister: false, administrator: '' }, balanceUgnot: '0', markets: 0, open: 0, steps: [], skipped: [], errors: [],
+    roles: { quoter: false, lister: false, administrator: '' }, balanceUgnot: '0', markets: 0, open: 0, tradable: 0, steps: [], skipped: [], errors: [],
   };
   let calls = 0;
   const canSend = () => calls < o.maxCalls && Date.now() - started < o.deadlineMs;
@@ -137,7 +164,7 @@ export async function runRobot(signer: Signer, options: RobotOptions): Promise<R
     report.steps.push(step);
     if (o.dryRun) { step.ok = true; return true; }
     try {
-      step.tx = await as.call(realm, func, args, { sendUgnot, gas: GAS[func as keyof typeof GAS] ?? 10_000_000 });
+      step.tx = await as.call(realm, func, args, { sendUgnot });
       step.ok = true;
     } catch (error) {
       step.error = String((error as Error).message ?? error).slice(0, 300);
@@ -145,8 +172,9 @@ export async function runRobot(signer: Signer, options: RobotOptions): Promise<R
     return step.ok;
   };
 
-  // Realm v1: accept the administrator role if offered, then requote what drifted
-  // and brake what Polygon has settled. One price per market, a version check per call.
+  // Realm v1: accept the administrator role if offered, then brake what Polygon
+  // has settled and requote what drifted, within its own cap per run. v1's
+  // markets are read-only in the app, so its prices only need to stay honest.
   const keepV1 = async (v1: string) => {
     const address = async (expression: string) => (await qevalRaw(o.rpc, v1, expression)).match(/g1[0-9a-z]{38}/)?.[0] ?? '';
     let administrator = await address('Administrator()');
@@ -160,13 +188,9 @@ export async function runRobot(signer: Signer, options: RobotOptions): Promise<R
       const [clob, polygon] = await Promise.all([fetchClob(m.conditionId, m.yesTokenId, http).catch(() => null), readAgreedSettlement(m.conditionId)]);
       return { m, status: await decide(v1, m, now, clob, polygon) };
     });
-    const moves = reads.flatMap(({ m, status }) => (status?.actions ?? []).flatMap(a =>
-      a.kind === 'brake' ? [{ m, kind: 'brake', price: a.yesPricePpm, reason: a.reason, weight: 2_000_000 }]
-      : a.kind === 'requote' ? [{ m, kind: 'requote', price: v1Price(a.yesPricePpm), reason: `Polymarket moved ${(a.driftPpm / 10_000).toFixed(1)} points`, weight: a.driftPpm }]
-      : []))
-      .filter(x => x.price !== x.m.yesPricePpm)
-      .sort((x, y) => y.weight - x.weight);
-    for (const x of moves) await send(x.kind, 'SetQuote', [x.m.id, String(x.price), String(x.m.quoteVersion)], x.reason, x.m.id, undefined, v1);
+    const moves = v1Moves(reads, o.v1DriftPpm);
+    for (const x of moves.slice(0, o.v1MaxCalls)) await send(x.kind, 'SetQuote', [x.m.id, String(x.price), String(x.m.quoteVersion)], x.reason, x.m.id, undefined, v1);
+    if (moves.length > o.v1MaxCalls) report.skipped.push({ what: `${moves.length - o.v1MaxCalls} v1 quotes`, reason: `v1 is capped at ${o.v1MaxCalls} calls per run` });
   };
 
   const chain = await fetchStatus(o.rpc);
@@ -190,6 +214,8 @@ export async function runRobot(signer: Signer, options: RobotOptions): Promise<R
   const markets = await fetchMarkets(o.rpc, o.realm, undefined, 2);
   report.markets = markets.length;
   report.open = markets.filter(m => m.state === 'open' || m.state === 'paused').length;
+  const tradable = markets.filter(m => (m.state === 'open' || m.state === 'paused') && m.closesAt > now);
+  report.tradable = tradable.length;
   const reads = await pool(markets, 6, async m => {
     if (m.state === 'final') return { m, clob: null as ClobRead | null, status: null };
     const [clob, polygon] = await Promise.all([fetchClob(m.conditionId, m.yesTokenId, http).catch(() => null), readAgreedSettlement(m.conditionId)]);
@@ -223,7 +249,7 @@ export async function runRobot(signer: Signer, options: RobotOptions): Promise<R
       if (a.kind === 'pause' && quoter && m.state === 'open' && !proposed.has(m.id)) await send('pause', 'Pause', [m.id], a.reason, m.id);
     }
   }
-  // Then prices: the largest drift first.
+  // Then v2's prices: the largest drift first, then renewals of the oldest quotes.
   if (quoter) {
     const requotes = reads.flatMap(({ m, status }) => (status?.actions ?? []).filter(a => a.kind === 'requote').map(a => ({ m, a: a as Extract<typeof a, { kind: 'requote' }> })))
       .sort((x, y) => y.a.driftPpm - x.a.driftPpm);
@@ -233,31 +259,19 @@ export async function runRobot(signer: Signer, options: RobotOptions): Promise<R
       if (!q) continue;
       if (await send('requote', 'SetQuote', [m.id, String(q.yes), String(q.no), String(m.quoteVersion)], `Polymarket moved ${(a.driftPpm / 10_000).toFixed(1)} points`, m.id)) requoted.add(m.id);
     }
-    // Renew the oldest quotes that will otherwise expire.
-    const stale = markets.filter(m => m.state === 'open' && !m.realmPaused && !requoted.has(m.id) && m.closesAt > now && now - m.quotedAt >= o.renewAfterSeconds)
+    // Renew quotes before they age: with runs four hours apart (Hobby fires within
+    // the hour), renewing from six hours keeps every quote under about eleven.
+    const stale = tradable.filter(m => m.state === 'open' && !m.realmPaused && !requoted.has(m.id) && !proposed.has(m.id) && now - m.quotedAt >= o.renewAfterSeconds)
       .sort((x, y) => x.quotedAt - y.quotedAt);
     for (const m of stale) await send('renew', 'SetQuote', [m.id, String(m.yesPricePpm), String(m.noPricePpm), String(m.quoteVersion)], `quote ${Math.round((now - m.quotedAt) / 3600)} hours old`, m.id);
-  }
-  // Realm v1's prices, when this robot is its administrator.
-  if (o.v1Realm) {
-    try { await keepV1(o.v1Realm); } catch (error) { report.errors.push(`v1: ${(error as Error).message}`); }
-  }
-  // Surplus of final markets goes to their treasury (anyone may send it).
-  for (const m of markets.filter(x => x.state === 'final')) {
-    try {
-      const raw = await qeval(o.rpc, o.realm, `Surplus("${m.id}")`).catch(() => '');
-      const values = [...String(raw).matchAll(/\((-?\d+) int64\)/g)].map(x => BigInt(x[1]));
-      if (values.length === 2 && values[0] >= 0n && values[1] >= 0n && values[0] + values[1] > 0n) {
-        await send('surplus', 'WithdrawSurplus', [m.id], `${values[0] + values[1]} ugnot no longer owed`, m.id);
-      }
-    } catch (error) { report.errors.push(`surplus ${m.id}: ${(error as Error).message}`); }
   }
 
   // A market listed earlier whose funding did not land gets its opening collateral now.
   if (lister) {
-    for (const m of markets.filter(x => x.state === 'open' && x.escrowUgnot === 0n && x.closesAt > now + 3600)) {
-      if (balance < o.minBalanceUgnot + o.reserveUgnot) break;
-      if (await send('fund', 'Fund', [m.id], 'the market has no collateral yet', m.id, o.reserveUgnot)) balance -= o.reserveUgnot;
+    for (const m of tradable.filter(x => x.state === 'open' && x.escrowUgnot === 0n && x.closesAt > now + 3600)) {
+      const reserve = o.window && m.closesAt >= o.window.from && m.closesAt < o.window.to ? o.window.reserveUgnot : o.reserveUgnot;
+      if (balance < o.minBalanceUgnot + reserve) break;
+      if (await send('fund', 'Fund', [m.id], 'the market has no collateral yet', m.id, reserve)) balance -= reserve;
     }
   }
 
@@ -265,48 +279,146 @@ export async function runRobot(signer: Signer, options: RobotOptions): Promise<R
   if (!lister) report.skipped.push({ what: 'listing', reason: 'this robot is not the lister' });
   else if (!info.listingTerms.oracle || !info.listingTerms.treasury) report.skipped.push({ what: 'listing', reason: 'the administrator has not set listing terms' });
   else if (info.paused) report.skipped.push({ what: 'listing', reason: 'the realm is paused' });
-  else if (report.open >= o.maxOpenListed) report.skipped.push({ what: 'listing', reason: `${report.open} open markets, the limit is ${o.maxOpenListed}` });
+  else if (tradable.length >= o.maxOpenListed) report.skipped.push({ what: 'listing', reason: `${tradable.length} markets trade now, the limit is ${o.maxOpenListed}` });
   else {
     balance = o.dryRun ? balance : await signer.balance();
-    if (balance < o.minBalanceUgnot + o.reserveUgnot) report.skipped.push({ what: 'listing', reason: `balance ${balance} ugnot is below what a listing needs` });
-    else {
-      const listed = new Set(markets.map(m => m.conditionId));
-      if (o.v1Realm) {
-        try { for (const m of await fetchMarkets(o.rpc, o.v1Realm, undefined, 1)) listed.add(m.conditionId); } catch { /* v1 unreadable: rely on v2 only */ }
-      }
-      const taken = new Set(markets.map(m => m.id));
-      const candidates = await findCandidates(http, now, listed, report, o.listKinds === 'games');
-      let made = 0;
-      for (const c of candidates) {
-        if (made >= o.listPerRun || !canSend()) break;
-        const source = await verifySource(http, c).catch(error => { report.skipped.push({ what: c.m.question, reason: String((error as Error).message) }); return null; });
-        if (!source) continue;
-        const q = twoSided(source.midYesPpm, info.minSpreadPpm, { min: info.minPricePpm, max: info.maxPricePpm });
-        if (!q) { report.skipped.push({ what: c.m.question, reason: 'price outside the band' }); continue; }
-        const id = idFrom(c.m.slug, taken);
-        const args = [id, source.question, source.rules, c.m.conditionId, source.tokens[0], source.tokens[1], c.outcomes[0], c.outcomes[1],
-          String(c.close.at), String(q.yes), String(q.no), String(info.listingTerms.feePpm), info.listingTerms.oracle, info.listingTerms.treasury, c.topic];
-        if (!await send('list', 'CreateMarket', args, `${c.topic}: ${c.m.question} (${c.close.reason})`, id)) continue;
-        await send('fund', 'Fund', [id], 'opening collateral', id, o.reserveUgnot);
-        made++;
-      }
+    const listed = new Set(markets.map(m => m.conditionId));
+    if (o.v1Realm) {
+      try { for (const m of await fetchMarkets(o.rpc, o.v1Realm, undefined, 1)) listed.add(m.conditionId); } catch { /* v1 unreadable: rely on v2 only */ }
+    }
+    const taken = new Set(markets.map(m => m.id));
+    const windows = o.window && now < o.window.to ? [o.window] : [];
+    const candidates = await findCandidates(http, now, listed, report, o.listKinds === 'games', windows);
+    const picks = pickListings(candidates, tradable, now, o);
+    if (!picks.length) report.skipped.push({ what: 'listing', reason: o.window && now >= o.window.to ? 'the listing window has passed' : 'no match fits the window or the near-term slot yet' });
+    let made = 0;
+    for (const pick of picks) {
+      const c = pick.candidate;
+      if (made >= o.listPerRun || !canSend()) break;
+      // Never below the floor, and a near-term listing leaves what the window's listings will need.
+      const needed = o.minBalanceUgnot + pick.reserveUgnot + LISTING_COST_UGNOT + (pick.slot === 'live' ? windowCommitment(tradable, o) : 0n);
+      if (balance < needed) { report.skipped.push({ what: c.m.question, reason: `balance ${balance} ugnot, a ${pick.slot} listing needs ${needed}` }); continue; }
+      const source = await verifySource(http, c).catch(error => { report.skipped.push({ what: c.m.question, reason: String((error as Error).message) }); return null; });
+      if (!source) continue;
+      const q = twoSided(source.midYesPpm, info.minSpreadPpm, { min: info.minPricePpm, max: info.maxPricePpm });
+      if (!q) { report.skipped.push({ what: c.m.question, reason: 'price outside the band' }); continue; }
+      const id = idFrom(c.m.slug, taken);
+      const args = [id, source.question, source.rules, c.m.conditionId, source.tokens[0], source.tokens[1], c.outcomes[0], c.outcomes[1],
+        String(c.close.at), String(q.yes), String(q.no), String(info.listingTerms.feePpm), info.listingTerms.oracle, info.listingTerms.treasury, c.topic];
+      if (!await send('list', 'CreateMarket', args, `${pick.slot}: ${c.topic}: ${c.m.question} (${c.close.reason})`, id)) continue;
+      taken.add(id);
+      if (await send('fund', 'Fund', [id], `opening collateral, ${pick.slot} listing`, id, pick.reserveUgnot)) balance -= pick.reserveUgnot;
+      balance -= LISTING_COST_UGNOT;
+      made++;
+    }
+  }
+
+  // 4. Upkeep that can wait for the next run: realm v1's prices and the surplus of
+  // final markets (sent to their treasury), each within its own cap, and only
+  // while the balance stays above the floor kept for v2.
+  balance = o.dryRun ? balance : await signer.balance().catch(() => balance);
+  if (balance < o.minBalanceUgnot) report.skipped.push({ what: 'v1 quotes and surplus', reason: `balance ${balance} ugnot is below the floor ${o.minBalanceUgnot}` });
+  else {
+    if (o.v1Realm) {
+      try { await keepV1(o.v1Realm); } catch (error) { report.errors.push(`v1: ${(error as Error).message}`); }
+    }
+    let withdrawn = 0;
+    for (const m of markets.filter(x => x.state === 'final')) {
+      if (withdrawn >= o.surplusMaxCalls || !canSend()) break;
+      try {
+        // Surplus returns two int64 values, so it is read raw: qeval parses only a
+        // string result, and until 27 November that refusal was swallowed here, so
+        // no surplus was ever sent.
+        const amount = surplusOf(await qevalRaw(o.rpc, o.realm, `Surplus("${m.id}")`));
+        if (amount > 0n) {
+          await send('surplus', 'WithdrawSurplus', [m.id], `${amount} ugnot no longer owed`, m.id);
+          withdrawn++;
+        }
+      } catch (error) { report.errors.push(`surplus ${m.id}: ${(error as Error).message}`); }
     }
   }
   report.balanceUgnot = String(o.dryRun ? balance : await signer.balance().catch(() => balance));
   return report;
 }
 
+// What WithdrawSurplus would send, from Surplus()'s raw answer
+// "(collateral int64)\n(fees int64)".
+export function surplusOf(raw: string): bigint {
+  const values = [...raw.matchAll(/\((-?\d+) int64\)/g)].map(x => BigInt(x[1]));
+  return values.length === 2 && values[0] >= 0n && values[1] >= 0n ? values[0] + values[1] : 0n;
+}
+
+// v1's moves in the order they are sent: brakes on settled markets first, then
+// the largest drifts from the threshold up.
+export function v1Moves<M extends { id: string; yesPricePpm: number; quoteVersion: number }>(reads: { m: M; status: { actions?: { kind: string; yesPricePpm?: number; driftPpm?: number; reason?: string }[] } | null }[], driftPpm: number) {
+  return reads.flatMap(({ m, status }) => (status?.actions ?? []).flatMap(a =>
+    a.kind === 'brake' ? [{ m, kind: 'brake', price: a.yesPricePpm as number, reason: a.reason ?? 'settled on Polygon', weight: 2_000_000 }]
+    : a.kind === 'requote' && (a.driftPpm ?? 0) >= driftPpm ? [{ m, kind: 'requote', price: v1Price(a.yesPricePpm as number), reason: `Polymarket moved ${((a.driftPpm ?? 0) / 10_000).toFixed(1)} points`, weight: a.driftPpm ?? 0 }]
+    : []))
+    .filter(x => x.price !== x.m.yesPricePpm)
+    .sort((x, y) => y.weight - x.weight);
+}
+
+type Slotted = { closesAt: number };
+const inWindow = (at: number, w: ListingWindow | null) => Boolean(w && at >= w.from && at < w.to);
+
+// What the window's remaining listings will need: a near-term listing leaves it untouched.
+export function windowCommitment(tradable: Slotted[], o: { window: ListingWindow | null }): bigint {
+  if (!o.window) return 0n;
+  const left = Math.max(0, o.window.max - tradable.filter(m => inWindow(m.closesAt, o.window)).length);
+  return BigInt(left) * (o.window.reserveUgnot + LISTING_COST_UGNOT);
+}
+
+// Which candidates to list now, best first. Window matches come first, the most
+// traded first, up to the window's own limit; before the window starts, one
+// near-term match (trading at least minLifeSeconds) keeps v2 live. Both stay
+// inside the cap on markets that trade at once.
+export function pickListings<C extends { m: { volumeNum?: number }; close: { at: number } }>(candidates: C[], tradable: Slotted[], now: number,
+  o: { window: ListingWindow | null; liveMax: number; minLifeSeconds: number; maxOpenListed: number; reserveUgnot: bigint }): { candidate: C; slot: 'window' | 'live'; reserveUgnot: bigint }[] {
+  const byVolume = (a: C, b: C) => (b.m.volumeNum ?? 0) - (a.m.volumeNum ?? 0);
+  let room = Math.max(0, o.maxOpenListed - tradable.length);
+  const out: { candidate: C; slot: 'window' | 'live'; reserveUgnot: bigint }[] = [];
+  if (o.window && now < o.window.to) {
+    const open = tradable.filter(m => inWindow(m.closesAt, o.window)).length;
+    const take = Math.min(room, Math.max(0, o.window.max - open));
+    for (const c of candidates.filter(c => inWindow(c.close.at, o.window)).sort(byVolume).slice(0, take)) out.push({ candidate: c, slot: 'window', reserveUgnot: o.window.reserveUgnot });
+    room -= out.length;
+  }
+  if (!o.window || now < o.window.from) {
+    const open = tradable.filter(m => !inWindow(m.closesAt, o.window)).length;
+    const take = Math.min(room, Math.max(0, o.liveMax - open));
+    for (const c of candidates.filter(c => !inWindow(c.close.at, o.window) && c.close.at >= now + o.minLifeSeconds && (!o.window || c.close.at < o.window.from)).sort(byVolume).slice(0, take)) {
+      out.push({ candidate: c, slot: 'live', reserveUgnot: o.reserveUgnot });
+    }
+  }
+  return out;
+}
+
 interface Candidate { m: GammaMarket; e: GammaEvent; topic: Topic; outcomes: [string, string]; close: { at: number; reason: string }; mid: number }
 
-// Polymarket's busiest open events, filtered by the same rules as the hand-picked list.
-export async function findCandidates(http: typeof fetch, now: number, listed: Set<string>, report: Pick<Report, 'errors'>, gamesOnly = true): Promise<Candidate[]> {
+// Polymarket's busiest open events, plus the events that end around each listing
+// window (a match weeks away is not among the busiest yet), filtered by the same
+// rules as the hand-picked list.
+export async function findCandidates(http: typeof fetch, now: number, listed: Set<string>, report: Pick<Report, 'errors'>, gamesOnly = true,
+  windows: { from: number; to: number }[] = []): Promise<Candidate[]> {
   const events: GammaEvent[] = [];
-  for (const offset of [0, 100]) {
-    try {
-      const response = await http(`https://gamma-api.polymarket.com/events?active=true&closed=false&archived=false&limit=100&offset=${offset}&order=volume24hr&ascending=false`, { signal: AbortSignal.timeout(15_000) });
-      if (!response.ok) throw new Error(`Gamma answered ${response.status}`);
-      events.push(...await response.json() as GammaEvent[]);
-    } catch (error) { report.errors.push(`gamma: ${(error as Error).message}`); break; }
+  const seen = new Set<string>();
+  const iso = (t: number) => new Date(t * 1000).toISOString();
+  const queries = [
+    'order=volume24hr&ascending=false',
+    // Gamma's end date of a match event is the game day or a few days later.
+    ...windows.map(w => `order=volume24hr&ascending=false&end_date_min=${iso(w.from - 86_400)}&end_date_max=${iso(w.to + 7 * 86_400)}`),
+  ];
+  for (const query of queries) {
+    for (const offset of [0, 100]) {
+      try {
+        const response = await http(`https://gamma-api.polymarket.com/events?active=true&closed=false&archived=false&limit=100&offset=${offset}&${query}`, { signal: AbortSignal.timeout(15_000) });
+        if (!response.ok) throw new Error(`Gamma answered ${response.status}`);
+        const page = await response.json() as GammaEvent[];
+        for (const e of page) if (!seen.has(e.slug)) { seen.add(e.slug); events.push(e); }
+        if (page.length < 100) break;
+      } catch (error) { report.errors.push(`gamma: ${(error as Error).message}`); break; }
+    }
   }
   const out: Candidate[] = [];
   for (const e of events) {

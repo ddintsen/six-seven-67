@@ -1,8 +1,9 @@
-// node --experimental-strip-types ops/robot/cli.ts --rpc <url> --realm <v2 path> [--v1 <path>] [--dry] [--list 2] [--all] [--reserve 3000000]
+// node --experimental-strip-types ops/robot/cli.ts --rpc <url> --realm <v2 path> [--v1 <path>] [--dry] [--as <address>] [--balance <ugnot>] [--now <time>] [--list 2] [--all] [--reserve 3000000]
 // Runs the robot once from a shell. The key comes from ROBOT_MNEMONIC in the
 // environment (ROBOT_ORACLE_MNEMONIC adds the robot-oracle); with --dry and no
 // key it plans with a throwaway address.
 import { runRobot, type Signer } from './robot.ts';
+import { robotSettings, timeOf } from './settings.ts';
 import { walletSigner } from './signer.ts';
 
 const args = process.argv.slice(2);
@@ -14,13 +15,17 @@ const dryRun = args.includes('--dry');
 const mnemonic = process.env.ROBOT_MNEMONIC ?? '';
 let signer: Signer;
 if (mnemonic) signer = await walletSigner(rpc, mnemonic);
-else if (dryRun) signer = { address: option('--as', 'g1robotdryrun000000000000000000000000000'), balance: async () => 1_000_000_000n, call: async () => '' };
+else if (dryRun) signer = { address: option('--as', 'g1robotdryrun000000000000000000000000000'), balance: async () => BigInt(option('--balance', '1000000000')), call: async () => '' };
 else throw new Error('ROBOT_MNEMONIC is not set');
 const oracleMnemonic = process.env.ROBOT_ORACLE_MNEMONIC ?? '';
 const oracle = oracleMnemonic ? await walletSigner(rpc, oracleMnemonic) : undefined;
+// The same settings as production (ops/robot/settings.ts), then the flags.
+const settings = robotSettings(process.env);
 const report = await runRobot(signer, {
-  rpc, realm, oracle, v1Realm: option('--v1') || undefined, dryRun,
-  listPerRun: Number(option('--list', '2')), listKinds: args.includes('--all') ? 'all' : 'games', reserveUgnot: BigInt(option('--reserve', '3000000')),
-  maxCalls: Number(option('--max-calls', '30')), renewAfterSeconds: Number(option('--renew-after', String(14 * 3600))),
+  rpc, realm, oracle, v1Realm: option('--v1') || undefined, dryRun, ...settings,
+  listPerRun: Number(option('--list', String(settings.listPerRun))), listKinds: args.includes('--all') ? 'all' : settings.listKinds,
+  reserveUgnot: BigInt(option('--reserve', String(settings.reserveUgnot))),
+  maxCalls: Number(option('--max-calls', '40')), renewAfterSeconds: Number(option('--renew-after', String(6 * 3600))),
+  ...(option('--now') ? { now: timeOf(option('--now'), 0) } : {}),
 });
 console.log(JSON.stringify(report, null, 2));
