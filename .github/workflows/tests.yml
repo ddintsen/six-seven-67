@@ -1,0 +1,62 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  realms:
+    name: Gno realms
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+
+      # contracts/README.md pins the Gno VM to github.com/gnolang/gno@v1.5.0.
+      - name: Build gno v1.5.0
+        run: |
+          git clone --quiet --depth 1 --branch v1.5.0 https://github.com/gnolang/gno.git "$RUNNER_TEMP/gno"
+          (cd "$RUNNER_TEMP/gno" && go install ./gnovm/cmd/gno)
+          echo "GNOROOT=$RUNNER_TEMP/gno" >> "$GITHUB_ENV"
+
+      - name: Markets v1
+        working-directory: contracts
+        run: gno test .
+
+      - name: Markets v2
+        working-directory: contracts
+        run: gno test ./v2
+
+      - name: Home realm
+        working-directory: contracts
+        run: gno test ./home
+
+  web:
+    name: Web app
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
