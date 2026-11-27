@@ -89,14 +89,13 @@ Scenario 41 runs in `e2e/site.spec.ts`.
 | A market is settled on Polygon but not yet in the realm | The market page's question status says so and that the oracle still has to record it | `e2e/status.spec.ts` |
 | A market is final | The market page shows the result instead of a price, and a short panel with "Claim in Portfolio" instead of the trade form | `e2e/status.spec.ts` |
 
-## How fresh a price is (October 15)
+## Quote freshness and source
 
 | Scenario | Expected behaviour | Covered by |
 | --- | --- | --- |
-| A trading market's price is within two points of Polymarket's midpoint | Under the price: "Updated … ago, in line with Polymarket." | `e2e/freshness.spec.ts`, `src/live/freshness.test.ts` |
-| Polymarket has moved two points or more | "Updated … ago. Polymarket is at N% now."; a match names its first side | `e2e/freshness.spec.ts`, `src/live/freshness.test.ts` |
-| Polymarket has no midpoint or cannot be reached | Only "Updated … ago." | `e2e/freshness.spec.ts` |
-| The price is more than a day old | "Updated on 11 Oct 2026." | `src/live/freshness.test.ts` |
+| A trading market displays a reference | Show when 67 set the quote and when Polymarket was checked with separate wording. The reference names the outcome. | `e2e/freshness.spec.ts`, `src/live/freshness.test.ts` |
+| Polymarket has no midpoint or cannot be reached | Show when 67 set the quote. | `e2e/freshness.spec.ts` |
+| The 67 quote is more than a day old | "67 quote updated on 11 Oct 2026." | `src/live/freshness.test.ts` |
 | The market is closed or final | No line | `e2e/freshness.spec.ts` |
 | The lead market on the list | The same line under its price | `e2e/freshness.spec.ts` |
 | The connected account is the oracle of two or more settled markets | "Sign all N in Adena" signs every result in one transaction | `e2e/status.spec.ts` |

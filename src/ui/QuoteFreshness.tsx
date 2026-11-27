@@ -3,8 +3,7 @@ import { freshnessText } from '../live/freshness';
 import { usePolymarketMidpoint } from '../live/midpoint';
 import type { MarketView } from '../view';
 
-// How old 67's price is, and where Polymarket is now when the two differ.
-// Shown only while the market trades; the text refreshes every minute.
+// Show when 67 posted the quote and when the separate reference was checked.
 export function QuoteFreshness({ market }: { market: MarketView }) {
   const open = market.trading === 'open' && !market.chain.finalized;
   const mid = usePolymarketMidpoint(open ? market.chain.yesTokenId : null);
@@ -15,5 +14,5 @@ export function QuoteFreshness({ market }: { market: MarketView }) {
     return () => clearInterval(timer);
   }, [open]);
   if (!open) return null;
-  return <p className="quote-fresh">{freshnessText(market.chain.quotedAt, market.chain.yesPricePpm, mid, market.chain.labels.Yes, now)}</p>;
+  return <p className="quote-fresh">{freshnessText(market.chain.quotedAt, mid, market.chain.labels.Yes, now)}</p>;
 }

@@ -273,7 +273,7 @@ export default function TestnetTicket({ market, outcome, onOutcome, onOpenWallet
         {switching === 'failed' && <p className="form-error" role="alert">Adena could not switch networks. Select {CHAIN.chainName} in the extension.</p>}
         {action}
         {CHAIN.faucetUrl && connected && onNetwork && balance < 1_000_000n && <a className="text-link" href={CHAIN.faucetUrl} target="_blank" rel="noopener noreferrer">Get test GNOT from the faucet<span className="sr-only"> (opens in a new tab)</span></a>}
-        <p className="ticket-note">A winning share pays 1 GNOT after the oracle finalizes the outcome. You can lose the full amount.{chain.feePpm > 0 ? ` The fee is ${formatPrice(chain.feePpm / 1e6)} × shares × price × (1 − price), fixed for this market and returned if it is void.` : ''} Test GNOT has no market value.</p>
+        <p className="ticket-note">A winning share pays 1 GNOT after the outcome is finalized. You can lose the full amount.{chain.feePpm > 0 ? ` The fee is ${formatPrice(chain.feePpm / 1e6)} × shares × price × (1 − price), fixed for this market and returned if it is void.` : ''} Test GNOT has no market value.</p>
       </form>
 
       <dialog ref={dialog} className="dialog review-dialog" aria-labelledby="trade-dialog-heading"

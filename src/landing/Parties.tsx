@@ -26,7 +26,7 @@ function Cubes({ cells, glass, x, y, scale }: { cells: Cell[]; glass: keyof type
 function Diagram() {
   return (
     <svg className="parties-diagram" viewBox="0 0 640 420" role="img" aria-labelledby="parties-diagram-title">
-      <title id="parties-diagram-title">Polymarket feeds the operator and the oracle; the operator publishes quotes, the oracle finalizes results, and you buy and claim, all through the 67 realm.</title>
+      <title id="parties-diagram-title">The operator publishes quotes, the oracle reports outcomes, and users buy and claim through the 67 realm.</title>
       <g className="flow-tracks">
         <path id="f-source-operator" d="M92 164 V 288" />
         <path id="f-source-oracle" d="M150 92 H 490" />
@@ -46,7 +46,7 @@ function Diagram() {
         <text x="104" y="214">midpoint</text>
         <text x="320" y="80" textAnchor="middle">result, once closed</text>
         <text x="160" y="300">SetQuote, every 10 min</text>
-        <text x="470" y="168" textAnchor="end">FinalizeByOracle</text>
+        <text x="470" y="168" textAnchor="end">Reports outcome</text>
         <text x="476" y="300" textAnchor="end">Buy, Claim</text>
       </g>
       <Cubes cells={[[0, 0], [1, 0], [2, 0], [0, 1], [1, 1], [2, 1]]} glass={([c]) => (c === 0 ? 'yes' : c === 2 ? 'no' : 'clear')} x={268} y={176} scale={3.4} />
@@ -111,7 +111,7 @@ export default function Parties({ markets, load }: { markets: MarketView[] | nul
     <section ref={section} className={`parties${inView ? ' is-live' : ''}`} aria-labelledby="parties-title">
       <div className="parties-copy">
         <h2 id="parties-title" className="section-title">Who does what</h2>
-        <p>The realm holds the collateral and checks every rule; nobody can withdraw it. Polymarket only supplies the questions and the results: 67 never trades there.</p>
+        <p>The realm checks quotes and holds collateral for payouts. Markets v2 gives the guardian 24 hours to cancel an oracle proposal. After that window, anyone can finalize it.</p>
         <p className="party-live">{status}</p>
       </div>
       <Diagram />

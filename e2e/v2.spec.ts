@@ -70,6 +70,7 @@ test('paused, expired, proposed and void markets explain themselves, and a void 
   await page.goto('/#/market/proposed-2026');
   await expect(panel(page).getByRole('heading', { name: 'Result proposed' })).toBeVisible({ timeout: 15_000 });
   await expect(panel(page).getByText(/The oracle proposed Yes\. Anyone can make it final from .* unless the guardian cancels it first\./)).toBeVisible();
+  await expect(page.getByText('The oracle proposes the outcome. The guardian can cancel it within 24 hours. After that window, anyone can finalize the proposal and eligible holders can claim.', { exact: true })).toBeVisible();
   await page.goto('/#/market/void-2026');
   await expect(page.getByText('Every holder takes back what they paid, the fee included.').first()).toBeVisible({ timeout: 15_000 });
   await expect(panel(page).getByRole('link', { name: 'Take your refund in Portfolio' })).toHaveAttribute('href', '#/portfolio');

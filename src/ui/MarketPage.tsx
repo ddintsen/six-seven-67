@@ -74,7 +74,10 @@ function ContractDetails({ market }: { market: MarketView }) {
   return (
     <section className="detail-section" aria-labelledby="source-heading">
       <h2 id="source-heading">Source and contract</h2>
-      <p>The question and rules are copied word for word from a Polymarket market and fixed in the contract. A position here is a 67 position on Gno, not a Polymarket position. When the source reports a final result, the oracle named below finalizes it on chain and holders claim their payout.</p>
+      <p>This position is held on Gno.land. The contract fixes the question, rules and source at listing.</p>
+      <p>{chain.version === 2
+        ? 'The oracle proposes the outcome. The guardian can cancel it within 24 hours. After that window, anyone can finalize the proposal and eligible holders can claim.'
+        : 'The designated oracle records the final outcome on chain. Eligible holders can then claim their payout.'}</p>
       <div className="source-links">
         {market.sourceLink && <a className="text-link" href={market.sourceLink} target="_blank" rel="noopener noreferrer">Source market on Polymarket<span className="sr-only"> (opens in a new tab)</span></a>}
         {realmUrl && <a className="text-link" href={realmUrl} target="_blank" rel="noopener noreferrer">Contract on {CHAIN.chainName}<span className="sr-only"> (opens in a new tab)</span></a>}
@@ -195,7 +198,7 @@ export default function MarketPage({ market, backHref, initialOutcome, live, onO
             <PriceChart question={market.question} points={history} unit={market.unit} until={live.chain?.blockTime} reference={reference} />
             <p className="chart-caption">
               {`Quote history since listing on ${formatDayTime(market.chain.createdAt)}. Each quote holds until the operator publishes the next one.`}
-              {reference ? ' The grey line is Polymarket’s price over the last month, which the quotes follow.' : ''}
+              {reference ? ' The grey line shows Polymarket’s price over the last month as a separate reference.' : ''}
             </p>
           </section>
 

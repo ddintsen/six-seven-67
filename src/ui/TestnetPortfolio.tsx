@@ -226,7 +226,7 @@ export default function TestnetPortfolio({ live, markets, onConnect }: { live: L
           )}
         </>
       )}
-      {rows.length > 0 && <p className="ledger-note">Value uses the current 67 quote and is not cash: this version has no selling. A winning share pays 1 GNOT once the oracle finalizes the outcome.{CHAIN.faucetUrl && <> <a className="text-link" href={CHAIN.faucetUrl} target="_blank" rel="noopener noreferrer">Test GNOT faucet<span className="sr-only"> (opens in a new tab)</span></a></>}</p>}
+      {rows.length > 0 && <p className="ledger-note">Value is an estimate based on the current 67 quote. This version supports buying and claiming. Each winning share pays 1 GNOT after finalization.{CHAIN.faucetUrl && <> <a className="text-link" href={CHAIN.faucetUrl} target="_blank" rel="noopener noreferrer">Test GNOT faucet<span className="sr-only"> (opens in a new tab)</span></a></>}</p>}
     </div>
   );
 }
