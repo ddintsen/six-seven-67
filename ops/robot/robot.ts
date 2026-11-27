@@ -289,12 +289,15 @@ export async function runRobot(signer: Signer, options: RobotOptions): Promise<R
     const taken = new Set(markets.map(m => m.id));
     const windows = o.window && now < o.window.to ? [o.window] : [];
     const candidates = await findCandidates(http, now, listed, report, o.listKinds === 'games', windows);
-    const picks = pickListings(candidates, tradable, now, o);
-    if (!picks.length) report.skipped.push({ what: 'listing', reason: o.window && now >= o.window.to ? 'the listing window has passed' : 'no match fits the window or the near-term slot yet' });
+    const picks = pickListings(candidates, now, o);
+    const left = slotLimits(tradable, now, o);
+    if (!picks.length || left.room === 0 || left.window + left.live === 0) report.skipped.push({ what: 'listing', reason: o.window && now >= o.window.to ? 'the listing window has passed' : picks.length ? 'the window and the near-term slot are full' : 'no match fits the window or the near-term slot yet' });
     let made = 0;
     for (const pick of picks) {
       const c = pick.candidate;
-      if (made >= o.listPerRun || !canSend()) break;
+      if (made >= o.listPerRun || left.room === 0 || !canSend()) break;
+      // A candidate that fails its checks gives its slot to the next one.
+      if (left[pick.slot] === 0) continue;
       // Never below the floor, and a near-term listing leaves what the window's listings will need.
       const needed = o.minBalanceUgnot + pick.reserveUgnot + LISTING_COST_UGNOT + (pick.slot === 'live' ? windowCommitment(tradable, o) : 0n);
       if (balance < needed) { report.skipped.push({ what: c.m.question, reason: `balance ${balance} ugnot, a ${pick.slot} listing needs ${needed}` }); continue; }
@@ -309,6 +312,8 @@ export async function runRobot(signer: Signer, options: RobotOptions): Promise<R
       taken.add(id);
       if (await send('fund', 'Fund', [id], `opening collateral, ${pick.slot} listing`, id, pick.reserveUgnot)) balance -= pick.reserveUgnot;
       balance -= LISTING_COST_UGNOT;
+      left[pick.slot]--;
+      left.room--;
       made++;
     }
   }
@@ -369,25 +374,30 @@ export function windowCommitment(tradable: Slotted[], o: { window: ListingWindow
   return BigInt(left) * (o.window.reserveUgnot + LISTING_COST_UGNOT);
 }
 
-// Which candidates to list now, best first. Window matches come first, the most
-// traded first, up to the window's own limit; before the window starts, one
-// near-term match (trading at least minLifeSeconds) keeps v2 live. Both stay
-// inside the cap on markets that trade at once.
-export function pickListings<C extends { m: { volumeNum?: number }; close: { at: number } }>(candidates: C[], tradable: Slotted[], now: number,
-  o: { window: ListingWindow | null; liveMax: number; minLifeSeconds: number; maxOpenListed: number; reserveUgnot: bigint }): { candidate: C; slot: 'window' | 'live'; reserveUgnot: bigint }[] {
+// How many listings may happen now: room under the cap on markets that trade
+// at once, the window's own limit, and one near-term slot until the window opens.
+export function slotLimits(tradable: Slotted[], now: number, o: { window: ListingWindow | null; liveMax: number; maxOpenListed: number }): { room: number; window: number; live: number } {
+  const inside = tradable.filter(m => inWindow(m.closesAt, o.window)).length;
+  return {
+    room: Math.max(0, o.maxOpenListed - tradable.length),
+    window: o.window && now < o.window.to ? Math.max(0, o.window.max - inside) : 0,
+    live: !o.window || now < o.window.from ? Math.max(0, o.liveMax - (tradable.length - inside)) : 0,
+  };
+}
+
+// Every candidate that may be listed, best first: window matches, the most
+// traded first; then, before the window starts, near-term matches that trade
+// at least minLifeSeconds. The run takes them in this order within slotLimits,
+// so one that fails its checks hands its slot to the next.
+export function pickListings<C extends { m: { volumeNum?: number }; close: { at: number } }>(candidates: C[], now: number,
+  o: { window: ListingWindow | null; minLifeSeconds: number; reserveUgnot: bigint }): { candidate: C; slot: 'window' | 'live'; reserveUgnot: bigint }[] {
   const byVolume = (a: C, b: C) => (b.m.volumeNum ?? 0) - (a.m.volumeNum ?? 0);
-  let room = Math.max(0, o.maxOpenListed - tradable.length);
   const out: { candidate: C; slot: 'window' | 'live'; reserveUgnot: bigint }[] = [];
   if (o.window && now < o.window.to) {
-    const open = tradable.filter(m => inWindow(m.closesAt, o.window)).length;
-    const take = Math.min(room, Math.max(0, o.window.max - open));
-    for (const c of candidates.filter(c => inWindow(c.close.at, o.window)).sort(byVolume).slice(0, take)) out.push({ candidate: c, slot: 'window', reserveUgnot: o.window.reserveUgnot });
-    room -= out.length;
+    for (const c of candidates.filter(c => inWindow(c.close.at, o.window)).sort(byVolume)) out.push({ candidate: c, slot: 'window', reserveUgnot: o.window.reserveUgnot });
   }
   if (!o.window || now < o.window.from) {
-    const open = tradable.filter(m => !inWindow(m.closesAt, o.window)).length;
-    const take = Math.min(room, Math.max(0, o.liveMax - open));
-    for (const c of candidates.filter(c => !inWindow(c.close.at, o.window) && c.close.at >= now + o.minLifeSeconds && (!o.window || c.close.at < o.window.from)).sort(byVolume).slice(0, take)) {
+    for (const c of candidates.filter(c => c.close.at >= now + o.minLifeSeconds && (!o.window || c.close.at < o.window.from)).sort(byVolume)) {
       out.push({ candidate: c, slot: 'live', reserveUgnot: o.reserveUgnot });
     }
   }

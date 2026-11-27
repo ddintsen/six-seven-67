@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { LISTING_COST_UGNOT, pickListings, surplusOf, twoSided, v1Moves, v1Price, windowCommitment, type ListingWindow } from './robot.ts';
+import { LISTING_COST_UGNOT, pickListings, slotLimits, surplusOf, twoSided, v1Moves, v1Price, windowCommitment, type ListingWindow } from './robot.ts';
 import { feeUgnot, gasWanted, ugnotPerGas } from './signer.ts';
 import { JUDGING_WINDOW, robotSettings, timeOf } from './settings.ts';
 
@@ -41,28 +41,33 @@ const window: ListingWindow = { from: JUDGING_WINDOW.from, to: JUDGING_WINDOW.to
 const options = { window, liveMax: 1, minLifeSeconds: 2 * DAY, maxOpenListed: 6, reserveUgnot: 3_000_000n };
 const match = (at: number, volumeNum: number) => ({ m: { volumeNum }, close: { at } });
 
-test('window matches come first, the most traded first, up to the window limit', () => {
+test('window matches come first, the most traded first; near-term ones must trade two days', () => {
   const sunday = JUDGING_WINDOW.from + 3600; // Sunday night's game, 01:00 UTC on 21 December
   const candidates = [match(sunday, 50_000), match(sunday + DAY, 900_000), match(sunday + 2 * 3600, 300_000), match(now + 3 * DAY, 80_000), match(now + DAY, 999_999)];
-  const picks = pickListings(candidates, [], now, options);
-  assert.deepEqual(picks.map(p => [p.slot, p.candidate.m.volumeNum, p.reserveUgnot]), [
+  assert.deepEqual(pickListings(candidates, now, options).map(p => [p.slot, p.candidate.m.volumeNum, p.reserveUgnot]), [
     ['window', 900_000, 8_000_000n], ['window', 300_000, 8_000_000n], ['window', 50_000, 8_000_000n],
-    // One near-term match that trades at least two days; the busier one closes tomorrow, too soon.
+    // The busier near-term match closes tomorrow, too soon.
     ['live', 80_000, 3_000_000n],
   ]);
-  // Two window markets already trade: two more at most; the near-term slot is taken too.
-  const open = [{ closesAt: sunday }, { closesAt: sunday + 60 }, { closesAt: now + 4 * DAY }];
-  assert.deepEqual(pickListings(candidates, open, now, options).map(p => p.candidate.m.volumeNum), [900_000, 300_000]);
-  // The cap on markets trading at once wins over both.
-  assert.equal(pickListings(candidates, Array.from({ length: 6 }, () => ({ closesAt: now + 9 * DAY })), now, options).length, 0);
 });
 
-test('no near-term listing once the window has started, nothing after it', () => {
+test('slots: the window limit, one near-term market, and the cap on markets trading at once', () => {
+  const sunday = JUDGING_WINDOW.from + 3600;
+  assert.deepEqual(slotLimits([], now, options), { room: 6, window: 4, live: 1 });
+  // Two window markets and a near-term one trade already.
+  assert.deepEqual(slotLimits([{ closesAt: sunday }, { closesAt: sunday + 60 }, { closesAt: now + 4 * DAY }], now, options), { room: 3, window: 2, live: 0 });
+  assert.equal(slotLimits(Array.from({ length: 6 }, () => ({ closesAt: now + 9 * DAY })), now, options).room, 0);
+  // Once the window opens, no near-term slot; after it, nothing.
+  assert.deepEqual(slotLimits([], JUDGING_WINDOW.from + 60, options), { room: 6, window: 4, live: 0 });
+  assert.deepEqual(slotLimits([], JUDGING_WINDOW.to + 60, options), { room: 6, window: 0, live: 0 });
+});
+
+test('no near-term pick once the window has started, nothing after it', () => {
   const candidates = [match(JUDGING_WINDOW.from + 3600, 1), match(JUDGING_WINDOW.from + 3 * DAY, 2)];
-  const during = JUDGING_WINDOW.from - 3600;
-  assert.deepEqual(pickListings(candidates, [], JUDGING_WINDOW.from + 60, options).map(p => p.slot), ['window']);
-  assert.deepEqual(pickListings(candidates, [], during, options).map(p => p.slot), ['window']);
-  assert.equal(pickListings(candidates, [], JUDGING_WINDOW.to + 60, options).length, 0);
+  assert.deepEqual(pickListings(candidates, JUDGING_WINDOW.from + 60, options).map(p => p.slot), ['window']);
+  // Before the window, a match after it is not a near-term pick either.
+  assert.deepEqual(pickListings(candidates, JUDGING_WINDOW.from - 3600, options).map(p => p.slot), ['window']);
+  assert.equal(pickListings(candidates, JUDGING_WINDOW.to + 60, options).length, 0);
 });
 
 test('a near-term listing leaves what the window still needs', () => {
