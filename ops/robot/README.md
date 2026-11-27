@@ -40,7 +40,7 @@ Cost: gas on Onyx is 0.001 ugnot per unit, so a quote costs about 0.005 GNOT; a 
 
 ## State (27 November 2026)
 
-The robot holds 0.0313 test GNOT and sends nothing until the owner tops it up (faucet or Adena, 100 test GNOT to `g13wgyakt05a202ekc09vk8mgdg9g4gdp6upxuna`). The robot-oracle holds 2.82 GNOT. `mlb-tb-cle-2026-10-16` waits for a person: Polymarket moved the game to 17 October and rewrote its rules, so the binding check (rules hash) stops the robot-oracle from proposing. Dry run with a 100 GNOT balance (`cli.ts --dry --as <robot> --balance 100000000`): lists Seahawks vs. 49ers (29 November) as the near-term match, brakes two settled v1 markets, requotes the six largest v1 drifts, withdraws six surpluses.
+The robot was topped up to about 300 test GNOT on 27 November and runs again since deployment 15: its first run (20:29 UTC) sent 8 v1 quotes and 6 surplus withdrawals, all accepted. Gas comes from `simulateGas` in `signer.ts`, which sends the transaction's bytes to `.app/simulate` once; tm2-js-client 3.3.0's `estimateGas` encodes them twice, which Onyx cannot decode. The robot-oracle holds 2.82 GNOT. `mlb-tb-cle-2026-10-16` waits for a person: Polymarket moved the game to 17 October and rewrote its rules, so the binding check (rules hash) stops the robot-oracle from proposing. Dry run with a 100 GNOT balance (`cli.ts --dry --as <robot> --balance 100000000`): lists Seahawks vs. 49ers (29 November) as the near-term match, brakes two settled v1 markets, requotes the six largest v1 drifts, withdraws six surpluses.
 
 ## State (15 October, 08:15 Kyiv)
 

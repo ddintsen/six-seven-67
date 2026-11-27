@@ -19,6 +19,21 @@ Environment: Linux x64 cloud workspace; Node 22.22; npm 10.9; Playwright 1.64 wi
 | axe-core (WCAG 2.0/2.1/2.2 A and AA tags) | No violations on home, markets, market, portfolio, how it works and contract, both venues, at 390 and 1440 (the scrollable code excerpt was made keyboard-focusable after the first run flagged it). |
 | Contrast on the real colours | Every text pair at least 4.5:1: ink on ground 16.5, muted on ground 7.7 and on hover 5.8, Yes on its tint 8.6, No on its tint 7.4, white on selected Yes 5.2 and No 6.4, ground on flint 16.5, caution 9.3, alert 7.2, code comments 4.6. Menu notes were moved from the quiet tone (4.4) to muted. |
 
+## The simulation fix and the first funded run (November 27, 2026, 20:30 UTC, Windows device)
+
+Environment: Windows 11; Node 24.18; Vercel CLI 54.18.1; live Onyx (`onyx-1`) at height about 1,459,000.
+
+| Check | Observed result |
+| --- | --- |
+| Why deployment 14 sent nothing | tm2-js-client 3.3.0's `estimateGas` base64-encodes the transaction twice, so Onyx answers `unknown field number 8 for Tx` (TxDecodeError) to every simulation, and the robot took that for a refusal |
+| `simulateGas` against Onyx (a `WithdrawSurplus` probe signed by the public gnodev `test1` key; simulation only) | `estimateGas`: `unknown field number 8 for Tx`. `simulateGas`: 5,766,192 gas |
+| `npm run typecheck`, `npm test` | Passed; 86 tests, two of them new for the simulation |
+| Robot dry runs as the robot with 31,300 ugnot, `--now` 28 November 00:17 and 04:17 UTC | 00:17: nothing sent (below the floor). 04:17: one step, `Finalize` on `nfl-car-phi-2026-10-18` |
+| Deployment 15 | `dpl_H3UX7pPE5nstCav2663k91cqXD7M`, production, aliased to https://the67.click and www; serves `index-Dl_KT3Gi.js` (the app is unchanged); `/api/robot` answers 401 without the secret |
+| Robot run triggered on production (`vercel crons run "/api/robot?slot=4"`, 20:29:56 UTC) | The robot held 299.72 test GNOT, topped up before the run. 14 transactions in blocks 1,458,988–1,459,001, all successful: 8 v1 `SetQuote` (two brakes on settled markets; Bitcoin vs. gold from 0.41 to 0.125) and 6 v2 `WithdrawSurplus`. Gas used 5.8–9.0M against 7.4–11.3M wanted. No listing: no match fits the window or the near-term slot yet |
+
+Not verified yet: a purchase on a fresh v2 market, the window's listings (Polymarket lists the 20–21 December games around 8–15 December), Panthers `Finalize` (due from 28 November 03:51:17 UTC); Safari, Firefox, real phones, a screen reader.
+
 ## The robot back, v1 read only, a live lead (November 27, 2026, Windows device)
 
 Environment: Windows 11; Node 24.18; Playwright 1.64 with local Chrome; Vercel CLI 54.18.1; live Onyx (`onyx-1`) at height about 1,449,000.
