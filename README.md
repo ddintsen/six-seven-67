@@ -133,3 +133,7 @@ See [architecture](docs/ARCHITECTURE.md), [scenarios](docs/SCENARIOS.md), [direc
 ## Roadmap
 
 2027: automated quoting and oracle proposals with alerts, a published source policy and an esports pilot, then user-proposed markets reviewed before a community listing vote. Quarter by quarter, with the evidence each step must produce: [docs/ROADMAP.md](docs/ROADMAP.md).
+
+## License
+
+Apache 2.0, see [LICENSE](LICENSE). Market questions, rules and pictures from Polymarket are third-party content and are not covered; see [NOTICE](NOTICE).
