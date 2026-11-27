@@ -2,6 +2,8 @@
 
 Prediction markets on Gno.land with frozen terms, collateral checks and outcome evidence anyone can recompute from Polygon.
 
+[![Tests](https://github.com/ddintsen/six-seven-67/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/ddintsen/six-seven-67/actions/workflows/tests.yml)
+
 [Follow one market on Onyx](https://onyx.testnets.gno.land/r/nym-sixseven067/markets/v2:nfl-car-phi-2026-10-18) · [Open markets](https://the67.click/#/markets) · [52-second walkthrough](https://dintsen.agency/assets/videos/six-seven-67/walkthrough.mp4) · [67 on Gno.land](https://onyx.testnets.gno.land/r/nym-sixseven067/home) · [Gnome Tavern entry](https://dorahacks.io/build/52004)
 
 [![67 walkthrough showing a live Onyx market, Yes and No prices, and a comparison chart](docs/media/67-walkthrough.png)](https://dintsen.agency/assets/videos/six-seven-67/walkthrough.mp4)
