@@ -4,6 +4,7 @@
 // refused. The key, the realm and the limits come from the project's encrypted
 // environment variables; the report goes to the function log.
 import { runRobot } from './robot.ts';
+import { robotSettings } from './settings.ts';
 import { walletSigner } from './signer.ts';
 
 interface Req { headers: Record<string, string | string[] | undefined> }
@@ -23,13 +24,9 @@ export default async function handler(req: Req, res: Res) {
     const oracle = oracleMnemonic ? await walletSigner(rpc, oracleMnemonic) : undefined;
     const report = await runRobot(signer, {
       rpc, realm, oracle, v1Realm: process.env.ROBOT_V1_REALM || 'gno.land/r/nym-sixseven067/markets',
-      listPerRun: Number(process.env.ROBOT_LIST_PER_RUN || 2),
-      listKinds: process.env.ROBOT_LIST_KINDS === 'all' ? 'all' : 'games',
-      maxOpenListed: Number(process.env.ROBOT_MAX_OPEN || 30),
-      reserveUgnot: BigInt(process.env.ROBOT_RESERVE_UGNOT || 3_000_000),
-      minBalanceUgnot: BigInt(process.env.ROBOT_MIN_BALANCE_UGNOT || 15_000_000),
+      ...robotSettings(process.env),
     });
-    console.log(JSON.stringify({ robot: report.robot, balanceUgnot: report.balanceUgnot, roles: report.roles, v1: report.v1, steps: report.steps.map(s => `${s.ok ? 'ok' : 'FAIL'} ${s.kind} ${s.market ?? ''} ${s.error ?? ''}`), errors: report.errors }));
+    console.log(JSON.stringify({ robot: report.robot, balanceUgnot: report.balanceUgnot, tradable: report.tradable, roles: report.roles, v1: report.v1, steps: report.steps.map(s => `${s.ok ? 'ok' : 'FAIL'} ${s.kind} ${s.market ?? ''} ${s.error ?? ''}`), skipped: report.skipped.slice(0, 12), errors: report.errors }));
     res.status(200).json(report);
   } catch (error) {
     console.error('robot run failed', (error as Error).message);

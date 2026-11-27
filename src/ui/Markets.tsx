@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import EmptyState from './EmptyState';
-import { NOT_FOUND, PLOT_WAITING } from '../brand/scenes';
+import { PLOT_WAITING } from '../brand/scenes';
 import type { Category } from '../domain';
 import { CHAIN } from '../live/config';
 import type { ChainMarket, ChainStatus } from '../live/gno';
@@ -34,8 +34,9 @@ function OutcomeLinks({ market, size = 'row' }: { market: MarketView; size?: 'ro
     const chain = market.chain;
     const named = (value: string) => value === 'Yes' || value === 'No' ? market.chain.labels[value] : value;
     const text = market.finalOutcome ? `${named(market.finalOutcome)} won` : chain?.finalized && chain.outcome === 'Void' ? 'Void, refunds open'
-      : market.source === 'proposed' ? `${named(chain?.outcome ?? '')} proposed` : market.trading === 'paused' ? 'Paused'
-        : market.trading === 'open' ? 'Quote unavailable' : 'Trading closed';
+      : market.readOnly ? 'Read only'
+        : market.source === 'proposed' ? `${named(chain?.outcome ?? '')} proposed` : market.trading === 'paused' ? 'Paused'
+          : market.trading === 'open' ? 'Quote unavailable' : 'Trading closed';
     return <p className={`outcome-closed outcome-closed-${size}`}>{text}</p>;
   }
   return (
@@ -55,7 +56,7 @@ function VenueNote({ load, chain, count }: { load: Load<ChainMarket[]>; chain: C
   return (
     <p className="venue-note">
       <span className="venue-mark testnet">{CHAIN.chainName}</span>
-      {load.status === 'error' && !load.data ? <span>Contract unavailable.</span> : 'data' in load && load.data ? <span>{count} {count === 1 ? 'market' : 'markets'} on the 67 contract, priced in test GNOT.</span> : <span>Reading the 67 contract.</span>}
+      {load.status === 'error' && !load.data ? <span>Contract unavailable.</span> : 'data' in load && load.data ? <span>{count} {count === 1 ? 'market' : 'markets'} {CHAIN.realmV2 ? 'across Markets v1 and v2' : 'on the 67 contract'}, priced in test GNOT.</span> : <span>Reading the 67 contract.</span>}
       {chain && !retained && <span className="venue-meta">Block {chain.height.toLocaleString('en-US')}</span>}
       {retained && load.observedAt && <span className="venue-meta caution">Showing data read at {formatClock(load.observedAt / 1000)} UTC</span>}
     </p>
@@ -71,13 +72,36 @@ export default function Markets({ markets, load, chain, query, category, onCateg
   if (sort === 'closing') sorted.sort((a, b) => a.closesAt - b.closesAt);
   if (sort === 'price') sorted.sort((a, b) => b.yesPrice - a.yesPrice);
   if (sort === 'volume') sorted.sort((a, b) => (b.chain?.volumeUgnot ?? 0n) > (a.chain?.volumeUgnot ?? 0n) ? 1 : -1);
-  // The lead is the first open market in the current order, so a settled
-  // question never takes the most prominent position.
-  const leadIndex = Math.max(0, sorted.findIndex(canTrade));
-  const lead = sorted[leadIndex];
-  const leadReference = usePolymarketHistory(lead && canTrade(lead) ? lead.chain.yesTokenId : null);
-  const rows = sorted.filter((_, index) => index !== leadIndex);
+  // The lead is the first market that can be bought now, in the current order:
+  // a settled question, a read-only v1 market or an expired quote never takes
+  // the most prominent position. With none open, the page says so instead.
+  const leadIndex = sorted.findIndex(canTrade);
+  const lead = leadIndex >= 0 ? sorted[leadIndex] : null;
+  const leadReference = usePolymarketHistory(lead ? lead.chain.yesTokenId : null);
+  const rest = sorted.filter((_, index) => index !== leadIndex);
+  // Markets v2 first, those open for trading at the top; v1 follows as the earlier contract.
+  const current = [...rest.filter(m => !m.readOnly && canTrade(m)), ...rest.filter(m => !m.readOnly && !canTrade(m))];
+  const earlier = rest.filter(m => m.readOnly);
   const filtering = Boolean(query) || category !== 'All';
+
+  const rowsOf = (list: MarketView[]) => (
+    <div className="rows rows-testnet">
+      <div className="rows-head" aria-hidden="true"><span>Question</span><span>Closes</span><span>Volume</span><span>{list.some(canTrade) ? 'Buy' : 'State'}</span></div>
+      {list.map(market => (
+        <article key={market.id} className="row">
+          <div className="row-copy">
+            <MarketThumb src={imageOf(market.chain.conditionId)} />
+            <a href={`#/market/${market.id}`} data-market-id={market.id} className="question-link">
+              <h3 style={{ viewTransitionName: `question-${market.id}` }}>{market.question}</h3>
+            </a>
+          </div>
+          <p className="row-date"><span className="row-label">Closes </span>{formatDay(market.closesAt)}</p>
+          <p className="row-volume">{market.stats ? <><span className="row-label">Volume </span>{market.stats.volume} GNOT</> : null}</p>
+          <OutcomeLinks market={market} />
+        </article>
+      ))}
+    </div>
+  );
 
   let body;
   if (!markets) {
@@ -91,75 +115,75 @@ export default function Markets({ markets, load, chain, query, category, onCateg
     } else {
       body = <section className="page-state" aria-busy="true"><h2>Reading markets from {CHAIN.chainName}</h2><p>Questions, quotes and volume come straight from the 67 contract.</p></section>;
     }
-  } else if (!lead && filtering) {
+  } else if (sorted.length === 0 && filtering) {
     // Polymarket's own markets follow below, so a short line is enough here.
-    body = <section className="page-state compact"><h2>Nothing on 67 matches yet</h2><p>{query ? 'No listed market matches this search.' : 'No market in this topic is listed on 67 yet.'} Polymarket’s markets are below.</p></section>;
-  } else if (!lead) {
-    body = filtering
-      ? <EmptyState scene={NOT_FOUND} title="No questions found" action={<button type="button" className="button" onClick={onClear}>Clear filters</button>}>Try another search or explore all topics.</EmptyState>
-      : <EmptyState scene={PLOT_WAITING} title="No markets yet">New questions appear here when the operator lists them.</EmptyState>;
+    body = <section className="page-state compact"><h2>Nothing on 67 matches yet</h2><p>{query ? 'No listed market matches this search.' : 'No market in this topic is listed on 67 yet.'} Polymarket’s markets are below.</p><button type="button" className="button" onClick={onClear}>Clear filters</button></section>;
+  } else if (sorted.length === 0) {
+    body = <EmptyState scene={PLOT_WAITING} title="No markets yet">New questions appear here when the operator lists them.</EmptyState>;
   } else {
-    const change = lead.history.length > 1 ? Math.round((lead.history[lead.history.length - 1].yes - lead.history[0].yes) * 100) : 0;
+    const change = lead && lead.history.length > 1 ? Math.round((lead.history[lead.history.length - 1].yes - lead.history[0].yes) * 100) : 0;
     body = <>
-      <section className="lead" aria-labelledby="lead-question">
-        <div className="lead-copy">
-          <div className="lead-title">
-            <MarketThumb src={imageOf(lead.chain.conditionId)} size="lead" />
-            <a href={`#/market/${lead.id}`} data-market-id={lead.id} className="question-link">
-              <h2 id="lead-question" className="lead-question" style={{ viewTransitionName: `question-${lead.id}` }}>{lead.question}</h2>
-            </a>
-          </div>
-          <dl className="lead-facts">
-            <div><dt>Trading closes</dt><dd>{formatDay(lead.closesAt)}</dd></div>
-            {lead.stats && <div><dt>Volume</dt><dd>{lead.stats.volume} GNOT</dd></div>}
-            {lead.stats && <div><dt>Trades</dt><dd>{lead.stats.trades}</dd></div>}
-          </dl>
-          <OutcomeLinks market={lead} size="lead" />
-        </div>
-        <div className="lead-quote">
-          <div className="quote-figure">
-            <p className="quote-number">{Math.round(lead.yesPrice * 100)}<span>%</span></p>
-            <div>
-              <p className="quote-label">{lead.chain.labels.Yes} price</p>
-              <p className="quote-sub">{formatPrice(lead.yesPrice)} {lead.unit} per share{change !== 0 && <>, {change > 0 ? 'up' : 'down'} {Math.abs(change)} {Math.abs(change) === 1 ? 'point' : 'points'} since listing</>}</p>
-              <QuoteFreshness market={lead} />
+      {lead ? (
+        <section className="lead" aria-labelledby="lead-question">
+          <div className="lead-copy">
+            <div className="lead-title">
+              <MarketThumb src={imageOf(lead.chain.conditionId)} size="lead" />
+              <a href={`#/market/${lead.id}`} data-market-id={lead.id} className="question-link">
+                <h2 id="lead-question" className="lead-question" style={{ viewTransitionName: `question-${lead.id}` }}>{lead.question}</h2>
+              </a>
             </div>
+            <dl className="lead-facts">
+              <div><dt>Trading closes</dt><dd>{formatDay(lead.closesAt)}</dd></div>
+              {lead.stats && <div><dt>Volume</dt><dd>{lead.stats.volume} GNOT</dd></div>}
+              {lead.stats && <div><dt>Trades</dt><dd>{lead.stats.trades}</dd></div>}
+            </dl>
+            <OutcomeLinks market={lead} size="lead" />
           </div>
-          <PriceChart question={lead.question} points={lead.history} unit={lead.unit} until={chain?.blockTime} reference={leadReference} compact />
-        </div>
-      </section>
+          <div className="lead-quote">
+            <div className="quote-figure">
+              <p className="quote-number">{Math.round(lead.yesPrice * 100)}<span>%</span></p>
+              <div>
+                <p className="quote-label">{lead.chain.labels.Yes} price</p>
+                <p className="quote-sub">{formatPrice(lead.yesPrice)} {lead.unit} per share{change !== 0 && <>, {change > 0 ? 'up' : 'down'} {Math.abs(change)} {Math.abs(change) === 1 ? 'point' : 'points'} since listing</>}</p>
+                <QuoteFreshness market={lead} />
+              </div>
+            </div>
+            <PriceChart question={lead.question} points={lead.history} unit={lead.unit} until={chain?.blockTime} reference={leadReference} compact />
+          </div>
+        </section>
+      ) : (
+        <section className="page-state compact" aria-labelledby="none-open">
+          <h2 id="none-open">{filtering ? 'Nothing here is open for trading right now' : 'No market is open for trading right now'}</h2>
+          <p>New matches open on Markets v2 as they are listed. Results and earlier markets are below.</p>
+        </section>
+      )}
 
-      <section className="market-list" aria-labelledby="more-questions">
-        <div className="list-heading">
-          <h2 id="more-questions">{filtering ? 'Matching questions' : 'More questions'} <span className="count">{filtering ? sorted.length : rows.length}</span></h2>
-          <label className="sort-field"><span className="sr-only">Sort by</span>
-            <select value={sort} onChange={event => setSort(event.target.value)}>
-              <option value="listed">Listing order</option>
-              <option value="closing">Closing soon</option>
-              <option value="price">Yes price</option>
-              <option value="volume">Volume</option>
-            </select>
-          </label>
-        </div>
-        {rows.length === 0 ? <p className="list-end">All matching questions are shown above.</p> : (
-          <div className="rows rows-testnet">
-            <div className="rows-head" aria-hidden="true"><span>Question</span><span>Closes</span><span>Volume</span><span>Buy</span></div>
-            {rows.map(market => (
-              <article key={market.id} className="row">
-                <div className="row-copy">
-                  <MarketThumb src={imageOf(market.chain.conditionId)} />
-                  <a href={`#/market/${market.id}`} data-market-id={market.id} className="question-link">
-                    <h3 style={{ viewTransitionName: `question-${market.id}` }}>{market.question}</h3>
-                  </a>
-                </div>
-                <p className="row-date"><span className="row-label">Closes </span>{formatDay(market.closesAt)}</p>
-                <p className="row-volume">{market.stats ? <><span className="row-label">Volume </span>{market.stats.volume} GNOT</> : null}</p>
-                <OutcomeLinks market={market} />
-              </article>
-            ))}
+      {current.length > 0 && (
+        <section className="market-list" aria-labelledby="more-questions">
+          <div className="list-heading">
+            <h2 id="more-questions">{filtering ? 'Matching questions' : lead ? 'More questions' : 'Questions'} <span className="count">{current.length}</span></h2>
+            <label className="sort-field"><span className="sr-only">Sort by</span>
+              <select value={sort} onChange={event => setSort(event.target.value)}>
+                <option value="listed">Listing order</option>
+                <option value="closing">Closing soon</option>
+                <option value="price">Yes price</option>
+                <option value="volume">Volume</option>
+              </select>
+            </label>
           </div>
-        )}
-      </section>
+          {rowsOf(current)}
+        </section>
+      )}
+
+      {earlier.length > 0 && (
+        <section className="market-list earlier" aria-labelledby="earlier-contract">
+          <div className="list-heading">
+            <h2 id="earlier-contract">Earlier contract <span className="count">{earlier.length}</span></h2>
+          </div>
+          <p className="earlier-note">Markets v1, 67’s first contract on {CHAIN.chainName}, kept for its record. Its quotes do not expire, so these markets are read only here. Holders still claim their payouts in Portfolio.</p>
+          {rowsOf(earlier)}
+        </section>
+      )}
     </>;
   }
 

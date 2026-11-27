@@ -204,13 +204,13 @@ export default function Landing({ markets, load, chain }: Props) {
             <div className="scale-caption">
               <a className="scale-question" href={`#/market/${market.id}`}>{market.question}</a>
               <p className="scale-prices">
-                <span className="yes-text"><strong>{Math.round(yes * 100)}%</strong> Yes at {formatPrice(yes)}</span>
-                <span className="no-text"><strong>{Math.round((1 - yes) * 100)}%</strong> No at {formatPrice(priceOf(market, 'No'))}</span>
+                <span className="yes-text"><strong>{Math.round(yes * 100)}%</strong> {market.chain.labels.Yes} at {formatPrice(yes)}</span>
+                <span className="no-text"><strong>{Math.round((1 - yes) * 100)}%</strong> {market.chain.labels.No} at {formatPrice(priceOf(market, 'No'))}</span>
               </p>
               <p className="scale-venue">Live on {CHAIN.chainName}, weighed by the balance</p>
             </div>
           ) : (
-            <div className="scale-caption"><p className="scale-venue">{load.status === 'error' ? 'Markets could not be read' : `Reading ${CHAIN.chainName}`}</p></div>
+            <div className="scale-caption"><p className="scale-venue">{load.status === 'error' ? 'Markets could not be read' : markets ? 'No market is open for trading right now' : `Reading ${CHAIN.chainName}`}</p></div>
           )}
           {open.length > 1 && (
             <div className="scale-picker" role="group" aria-label="Weigh another question">
@@ -226,20 +226,20 @@ export default function Landing({ markets, load, chain }: Props) {
 
       <Parties markets={markets} load={load} />
 
-      {markets && markets.length > 0 && (
+      {open.length > 0 && (
         <section className="landing-markets" aria-labelledby="landing-markets-title">
           <div className="section-head">
             <h2 id="landing-markets-title">Open on {CHAIN.chainName}</h2>
             <a className="text-link" href="#/markets">All markets</a>
           </div>
           <ul className="landing-rows">
-            {markets.filter(canTrade).slice(0, 4).map(item => (
+            {open.slice(0, 4).map(item => (
               <li key={item.id}>
                 <a className="landing-row" href={`#/market/${item.id}`}>
                   <span className="landing-row-question">{item.question}</span>
                   <span className="landing-row-meta">Closes {formatDay(item.closesAt)}{item.stats ? `, ${item.stats.volume} GNOT volume` : ''}</span>
-                  <span className="landing-row-price yes-text"><span>Yes</span> <span>{formatPrice(priceOf(item, 'Yes'))}</span></span>
-                  <span className="landing-row-price no-text"><span>No</span> <span>{formatPrice(priceOf(item, 'No'))}</span></span>
+                  <span className="landing-row-price yes-text"><span>{item.chain.labels.Yes}</span> <span>{formatPrice(priceOf(item, 'Yes'))}</span></span>
+                  <span className="landing-row-price no-text"><span>{item.chain.labels.No}</span> <span>{formatPrice(priceOf(item, 'No'))}</span></span>
                 </a>
               </li>
             ))}

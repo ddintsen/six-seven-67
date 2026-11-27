@@ -89,15 +89,24 @@ Scenario 41 runs in `e2e/site.spec.ts`.
 | A market is settled on Polygon but not yet in the realm | The market page's question status says so and that the oracle still has to record it | `e2e/status.spec.ts` |
 | A market is final | The market page shows the result instead of a price, and a short panel with "Claim in Portfolio" instead of the trade form | `e2e/status.spec.ts` |
 
-## How fresh a price is (October 15)
+## Quote freshness and source
 
 | Scenario | Expected behaviour | Covered by |
 | --- | --- | --- |
-| A trading market's price is within two points of Polymarket's midpoint | Under the price: "Updated … ago, in line with Polymarket." | `e2e/freshness.spec.ts`, `src/live/freshness.test.ts` |
-| Polymarket has moved two points or more | "Updated … ago. Polymarket is at N% now."; a match names its first side | `e2e/freshness.spec.ts`, `src/live/freshness.test.ts` |
-| Polymarket has no midpoint or cannot be reached | Only "Updated … ago." | `e2e/freshness.spec.ts` |
-| The price is more than a day old | "Updated on 11 Oct 2026." | `src/live/freshness.test.ts` |
+| A trading market displays a reference | Show when 67 set the quote and when Polymarket was checked with separate wording. The reference names the outcome. | `e2e/freshness.spec.ts`, `src/live/freshness.test.ts` |
+| Polymarket has no midpoint or cannot be reached | Show when 67 set the quote. | `e2e/freshness.spec.ts` |
+| The 67 quote is more than a day old | "67 quote updated on 11 Oct 2026." | `src/live/freshness.test.ts` |
 | The market is closed or final | No line | `e2e/freshness.spec.ts` |
 | The lead market on the list | The same line under its price | `e2e/freshness.spec.ts` |
 | The connected account is the oracle of two or more settled markets | "Sign all N in Adena" signs every result in one transaction | `e2e/status.spec.ts` |
 | Someone claims their last v2 position (or has purchases on record and nothing open) | "Nothing open right now", pointing to Activity, instead of the first-visit state | `e2e/v2.spec.ts` |
+
+## Current and earlier contract (November 27, 2026)
+
+| Scenario | Expected behaviour | Covered by |
+| --- | --- | --- |
+| Markets v2 is configured and a v2 market has a live quote | It leads the Markets page; v1 markets follow under "Earlier contract", each reading "Read only" | `e2e/v2.spec.ts` |
+| A v1 market page while v2 is configured | The closed panel "Earlier contract" with "See open markets"; no trade form and no trade bar; Trading reads "Read only, on the earlier contract"; claims stay in Portfolio | `e2e/v2.spec.ts` |
+| No v2 market can be bought now | "No market is open for trading right now" and nothing featured; Home says so under the balance and hides "Open on Onyx testnet" | `e2e/v2.spec.ts` |
+| Only v1 is configured (a v1-only build) | v1 markets trade as before | `e2e/testnet.spec.ts` |
+

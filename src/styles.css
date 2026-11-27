@@ -1109,3 +1109,21 @@ a.activity-time { text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 360px) {
   .portfolio .page-head { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'title' 'note' 'tools'; }
 }
+
+/* The earlier contract (Markets v1): read only, after the current markets. */
+.market-list.earlier { margin-top: 72px; }
+.earlier-note { max-width: 62ch; margin: 0 0 20px; font-size: 14px; color: var(--muted); }
+
+/* On a phone the lead's two team names stack, one full line each, instead of
+   one wrapping under its price beside one that fits. */
+@media (max-width: 560px) {
+  .outcome-links-lead.named { grid-template-columns: minmax(0, 1fr); }
+  .outcome-links-lead.named .outcome-link { flex-wrap: nowrap; }
+  .outcome-links-lead.named .outcome-link span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+
+/* The phone's trade bar keeps each side on one line: a long team name is
+   shortened, the price never moves under it. */
+.trade-bar .outcome-link { flex-wrap: nowrap; gap: 8px; padding: 0 12px; }
+.trade-bar .outcome-link span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 360px) { .trade-bar .outcome-link { font-size: 14px; padding: 0 10px; } }

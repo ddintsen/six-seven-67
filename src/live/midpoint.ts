@@ -31,9 +31,9 @@ async function load(token: string) {
   publish();
 }
 
-// The midpoint in millionths, or null while it loads or when Polymarket has
-// none. Re-read every minute while the price stays on screen.
-export function usePolymarketMidpoint(token: string | null | undefined): number | null {
+// The last observed midpoint in millionths and its fetch time. Re-read every
+// minute while the price stays on screen.
+export function usePolymarketMidpoint(token: string | null | undefined) {
   useEffect(() => {
     if (!token || !/^\d{1,100}$/.test(token)) return;
     void load(token);
@@ -41,5 +41,6 @@ export function usePolymarketMidpoint(token: string | null | undefined): number 
     return () => clearInterval(timer);
   }, [token]);
   useSyncExternalStore(listener => { listeners.add(listener); return () => { listeners.delete(listener); }; }, () => version, () => version);
-  return token ? known.get(token)?.ppm ?? null : null;
+  const entry = token ? known.get(token) : undefined;
+  return entry?.ppm == null ? null : { ppm: entry.ppm, observedAt: Math.floor(entry.at / 1000) };
 }

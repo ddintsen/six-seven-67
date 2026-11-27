@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { fetchMarkets, fetchStatus, type ChainMarket } from '../../src/live/gno.ts';
 import { fetchClob, type ClobRead } from '../../src/live/polymarket.ts';
 import { readAgreedSettlement } from '../../src/live/polygon.ts';
-import { canonicalJson, decide, realmAddress, type Alert, type MarketStatus } from '../../src/live/oracle.ts';
+import { canonicalJson, decide, evidenceHash, realmAddress, type Alert, type MarketStatus } from '../../src/live/oracle.ts';
 
 const args = process.argv.slice(2);
 const option = (name: string, fallback: string) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : process.env[`WATCH_${name.slice(2).toUpperCase()}`] ?? fallback; };
@@ -23,10 +23,13 @@ async function readClob(m: ChainMarket): Promise<ClobRead | null> {
 
 async function bankBalance(address: string): Promise<bigint | null> {
   try {
-    const response = await fetch(RPC, { method: 'POST', headers: { 'content-type': 'application/json' },
+    const response = await fetch(RPC, { method: 'POST', headers: { 'content-type': 'application/json' }, signal: AbortSignal.timeout(10_000),
       body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'abci_query', params: { path: `bank/balances/${address}`, data: '' } }) });
-    const json = await response.json() as { result?: { response?: { ResponseBase?: { Data?: string } } } };
-    const text = Buffer.from(json.result?.response?.ResponseBase?.Data ?? '', 'base64').toString('utf8');
+    if (!response.ok) return null;
+    const json = await response.json() as { result?: { response?: { ResponseBase?: { Data?: string; Error?: unknown } } } };
+    const base = json.result?.response?.ResponseBase;
+    if (!base || base.Error || typeof base.Data !== 'string') return null;
+    const text = Buffer.from(base.Data, 'base64').toString('utf8');
     const match = /"(\d+)ugnot"/.exec(text);
     return match ? BigInt(match[1]) : 0n;
   } catch {
@@ -42,7 +45,7 @@ let markets: MarketStatus[] = [];
 try {
   const chain = await fetchStatus(RPC);
   report.chain = chain;
-  if (chain.chainId !== CHAIN_ID) alerts.push({ key: 'chain-id', severity: 'critical', title: `The RPC reports ${chain.chainId}, not ${CHAIN_ID}`, body: RPC });
+  if (chain.chainId !== CHAIN_ID) throw new Error(`The RPC reports ${chain.chainId}, expected ${CHAIN_ID}`);
   const banks: Record<string, unknown>[] = [];
   for (const [path, version] of [[REALM, 1], ...(REALM_V2 ? [[REALM_V2, 2]] : [])] as [string, 1 | 2][]) {
     let list: ChainMarket[] = [];
@@ -53,12 +56,30 @@ try {
       if (version === 1) report.realmState = code === 'REALM_NOT_FOUND' ? 'not deployed' : 'unreadable';
       if (code !== 'REALM_NOT_FOUND') alerts.push({ key: `realm-unreadable:${path}`, severity: 'action', title: `The markets realm ${path} could not be read`, body: String((error as Error).message) });
     }
-    for (const m of list) {
-      const [clob, polygon] = await Promise.all([readClob(m), readAgreedSettlement(m.conditionId)]);
-      const status = await decide(path, m, chain.blockTime, clob, polygon);
-      markets.push(status);
-      alerts.push(...status.alerts);
-    }
+    const results: MarketStatus[] = new Array(list.length);
+    let next = 0;
+    await Promise.all(Array.from({ length: Math.min(list.length, 6) }, async () => {
+      while (next < list.length) {
+        const index = next++;
+        const market = list[index];
+        const [clob, polygon] = await Promise.all([readClob(market), readAgreedSettlement(market.conditionId)]);
+        const status = await decide(path, market, chain.blockTime, clob, polygon);
+        if (market.state === 'proposed' && market.evidenceHash) {
+          const computed = status.evidence && await evidenceHash(status.evidence);
+          if (computed !== market.evidenceHash) {
+            status.alerts.push({
+              key: `${path}:${market.id}:${market.evidenceHash}:proposal-evidence`,
+              severity: computed ? 'critical' : 'action',
+              title: computed ? `${market.id}: proposal hash differs from Polygon evidence` : `${market.id}: proposal evidence could not be checked`,
+              body: computed ? `Onyx has ${market.evidenceHash}. The recomputed hash is ${computed}.` : polygon.note,
+            });
+          }
+        }
+        results[index] = status;
+      }
+    }));
+    markets.push(...results);
+    alerts.push(...results.flatMap(status => status.alerts));
     if (list.length) {
       // What the realm owes: escrow, plus the fees v2 holds until each market is final.
       const address = await realmAddress(path);
@@ -71,16 +92,19 @@ try {
   report.bank = banks[0] ?? null;
   report.banks = banks;
 } catch (error) {
-  alerts.push({ key: 'rpc-down', severity: 'action', title: 'The Gno RPC is unreachable', body: `${RPC}: ${(error as Error).message}` });
+  alerts.push({ key: 'watch-read-failed', severity: 'action', title: 'The watcher could not complete its reads', body: `${RPC}: ${(error as Error).message}` });
 }
 
 report.markets = markets;
 report.alerts = alerts;
 mkdirSync(join(OUT, 'evidence'), { recursive: true });
+if (REALM_V2) mkdirSync(join(OUT, 'evidence', 'v2'), { recursive: true });
 writeFileSync(join(OUT, 'status.json'), JSON.stringify(report, null, 2) + '\n');
 writeFileSync(join(OUT, 'alerts.json'), JSON.stringify(alerts, null, 2) + '\n');
 for (const m of markets) {
-  if (m.evidence) writeFileSync(join(OUT, 'evidence', `${m.id}.json`), canonicalJson(m.evidence) + '\n');
+  if (!m.evidence) continue;
+  const directory = m.version === 2 ? join(OUT, 'evidence', 'v2') : join(OUT, 'evidence');
+  writeFileSync(join(directory, `${m.id}.json`), canonicalJson(m.evidence) + '\n');
 }
 
 // A short table for logs and the GitHub job summary.

@@ -1,6 +1,6 @@
 # Verification record
 
-Date: 2026-10-12, newest sections 2026-10-15 (Claude sessions). The commands table directly below is the 12 October baseline; each dated section after it records its own round. Scope: V6 (dark glass palette, cube mark, split header and menu sheet, night forest hero, How it works and Contract pages) on top of the V5 exchange, realm and chain layer. Earlier records (Codex, 2026-10-10/11) are in the previous source archive (`_to_delete/previews-v4/67-source.zip`).
+Date: 2026-10-12, newest sections 2026-11-27 (Claude sessions). The commands table directly below is the 12 October baseline; each dated section after it records its own round. Scope: V6 (dark glass palette, cube mark, split header and menu sheet, night forest hero, How it works and Contract pages) on top of the V5 exchange, realm and chain layer. Earlier records (Codex, 2026-10-10/11) are in the previous source archive (`_to_delete/previews-v4/67-source.zip`).
 
 Environment: Linux x64 cloud workspace; Node 22.22; npm 10.9; Playwright 1.64 with Chromium 1194 (SwiftShader software GL); gno, gnoland and gnokey v1.5.0; gnomcp 0.12.0.
 
@@ -18,6 +18,43 @@ Environment: Linux x64 cloud workspace; Node 22.22; npm 10.9; Playwright 1.64 wi
 | Standalone | `STANDALONE=1` build, `scripts/package-standalone.mjs` produced `67.html` (1.17 MB, 3D and still picture inlined) and `67-source.zip` (100 files, archive folders excluded); `scripts/verify-standalone.mjs` passed at 1440 and 390: default Testnet venue reads only the Onyx RPC and indexer, practice purchase and reload persistence, no local file requests, no horizontal overflow. |
 | axe-core (WCAG 2.0/2.1/2.2 A and AA tags) | No violations on home, markets, market, portfolio, how it works and contract, both venues, at 390 and 1440 (the scrollable code excerpt was made keyboard-focusable after the first run flagged it). |
 | Contrast on the real colours | Every text pair at least 4.5:1: ink on ground 16.5, muted on ground 7.7 and on hover 5.8, Yes on its tint 8.6, No on its tint 7.4, white on selected Yes 5.2 and No 6.4, ground on flint 16.5, caution 9.3, alert 7.2, code comments 4.6. Menu notes were moved from the quiet tone (4.4) to muted. |
+
+## The simulation fix and the first funded run (November 27, 2026, 20:30 UTC, Windows device)
+
+Environment: Windows 11; Node 24.18; Vercel CLI 54.18.1; live Onyx (`onyx-1`) at height about 1,459,000.
+
+| Check | Observed result |
+| --- | --- |
+| Why deployment 14 sent nothing | tm2-js-client 3.3.0's `estimateGas` base64-encodes the transaction twice, so Onyx answers `unknown field number 8 for Tx` (TxDecodeError) to every simulation, and the robot took that for a refusal |
+| `simulateGas` against Onyx (a `WithdrawSurplus` probe signed by the public gnodev `test1` key; simulation only) | `estimateGas`: `unknown field number 8 for Tx`. `simulateGas`: 5,766,192 gas |
+| `npm run typecheck`, `npm test` | Passed; 86 tests, two of them new for the simulation |
+| Robot dry runs as the robot with 31,300 ugnot, `--now` 28 November 00:17 and 04:17 UTC | 00:17: nothing sent (below the floor). 04:17: one step, `Finalize` on `nfl-car-phi-2026-10-18` |
+| Deployment 15 | `dpl_H3UX7pPE5nstCav2663k91cqXD7M`, production, aliased to https://the67.click and www; serves `index-Dl_KT3Gi.js` (the app is unchanged); `/api/robot` answers 401 without the secret |
+| Robot run triggered on production (`vercel crons run "/api/robot?slot=4"`, 20:29:56 UTC) | The robot held 299.72 test GNOT, topped up before the run. 14 transactions in blocks 1,458,988–1,459,001, all successful: 8 v1 `SetQuote` (two brakes on settled markets; Bitcoin vs. gold from 0.41 to 0.125) and 6 v2 `WithdrawSurplus`. Gas used 5.8–9.0M against 7.4–11.3M wanted. No listing: no match fits the window or the near-term slot yet |
+
+Not verified yet: a purchase on a fresh v2 market, the window's listings (Polymarket lists the 20–21 December games around 8–15 December), Panthers `Finalize` (due from 28 November 03:51:17 UTC); Safari, Firefox, real phones, a screen reader.
+
+## The robot back, v1 read only, a live lead (November 27, 2026, Windows device)
+
+Environment: Windows 11; Node 24.18; Playwright 1.64 with local Chrome; Vercel CLI 54.18.1; live Onyx (`onyx-1`) at height about 1,449,000.
+
+| Check | Observed result |
+| --- | --- |
+| Why the robot stopped (on chain) | The robot `g13wgy…xuna` held 31,300 ugnot. One quote as it was sent cost 37,500 (25M gas wanted at 0.001 ugnot × 1.5), so every call failed at check_tx. Robot-oracle: 2,815,600 ugnot. Operator: 121,947,488 ugnot |
+| Why the money went (indexer) | 789 robot transactions: 458 v1 `SetQuote`, 140 v2 `SetQuote`, 64 `CreateMarket`, 64 `Fund` (3 GNOT each), 60 `Finalize`, no `WithdrawSurplus`. Gas used 4.4–8.9M per call against 20–80M paid for. Realm v2 holds 219 GNOT, mostly withdrawable reserves |
+| Vercel | 6 cron jobs and 4 encrypted variables in place; last production deploy 42 days old; no runtime logs kept that far back (Hobby) |
+| `mlb-tb-cle-2026-10-16` | Polygon settled (two RPCs agree); Polymarket rescheduled the game to 17 October and rewrote the rules, so the rules hash differs from the realm's binding and the robot-oracle rightly holds it for a person |
+| `npm run typecheck`; strict `tsc` of `ops/robot/*` | Passed |
+| `npm test` | 84 passed, 10 of them the robot's: gas sizing, window and near-term picks, slots, the window's commitment, v1 order, settings, surplus parsing |
+| `npx playwright test` (local Chrome, three workers, local-chain test excluded) | 54 passed in 2.0 min. Two of them are new for v2: the lead is a v2 market with a live quote, v1 sits under "Earlier contract" with "Read only" rows and a v1 page has no trade form or bar (with axe, no violations); with no v2 market open, Markets and Home say so and feature nothing. Three tests were brought up to date: the site test follows the working copy’s new diagram title, and two v2 tests find the only open v2 market in the lead |
+| Robot dry run on live Onyx as the robot, with a 100 GNOT balance | Lists Seahawks vs. 49ers (29 November) as the near-term match with 3 GNOT, brakes two settled v1 markets, requotes the six largest v1 drifts (22 more capped), withdraws six surpluses; no errors |
+| The bundled function (`api/robot.js`, 1.36 MB) | 401 without the secret, 503 without the key |
+| Screenshots of the production build, local | 320, 390, 820 and 1440 px: Markets on live data (nothing open, the earlier contract), a v1 market, Panthers (proposed), Home; on the mock, a fresh v2 match in the lead, its page and Home; reduced motion at 390. No console errors, no horizontal overflow (`.qa/shots-1127/out/`, in the build clone) |
+| Deployment 14 | `dpl_HWWR1kVn6wRrZ7hWn7unnGLMVmnt`, aliased to https://the67.click; serves `index-Dl_KT3Gi.js`; `/api/robot` answers 401 without the secret; `www` redirects with 308; 6 cron jobs |
+| Robot run triggered on production (`vercel crons run "/api/robot?slot=4"`, 14:40 UTC) | 200 from deployment 14; balance 31,300 ugnot; nothing sent; listing skipped ("a live listing needs 50,500,000"), v1 quotes and surplus skipped below the 8 GNOT floor; no errors |
+| Live site at 320, 390, 820 and 1440 px, and reduced motion | No console errors, no horizontal overflow (`.qa/shots-1127/live-site/`) |
+
+Not verified yet: a funded robot run (the simulation path sending real transactions), a purchase on a fresh v2 market, the window's listings (Polymarket lists the 20–21 December games around 8–15 December), Panthers `Finalize` (due from 28 November 03:51:17 UTC); Safari, Firefox, real phones, a screen reader.
 
 ## Sign all, and the robot-oracle's first night (October 16, 09:00 Kyiv)
 

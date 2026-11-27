@@ -8,9 +8,11 @@
 import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const withRobot = process.argv.includes('--robot');
-const project = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+// fileURLToPath, not URL.pathname: on Windows the pathname starts with /C:/.
+const project = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(project, 'dist');
 const target = path.join(project, 'deploy', 'six-seven-67');
 

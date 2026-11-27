@@ -103,15 +103,15 @@ const CHAPTERS: Chapter[] = [
     id: 'collateral', title: 'The collateral', scene: COLLATERAL_VAULT,
     body: [
       'Each market holds its own collateral: reserve funding first, then the cost of every purchase. The realm refuses any purchase after which the larger side could not be paid in full.',
-      'Only winning claims take collateral out. There is no withdrawal function, not even for the administrator.',
+      'In Markets v2, outstanding payouts and Void refunds stay reserved. After finalization, surplus can go only to the treasury fixed at listing.',
     ],
     formula: ['max(Yes shares, No shares) ≤ collateral   (all in ugnot)'],
   },
   {
     id: 'result', title: 'The result', scene: ORACLE_RESULT,
     body: [
-      'Each market names its oracle when it is listed. Only that address can finalize it, once, and only by repeating the market’s full source binding with a hash of the evidence. Trading stops in the same transaction.',
-      'A Polymarket price near 100% is not a result. Until the oracle finalizes, nothing pays.',
+      'Each market names its oracle at listing. For Markets v1, the oracle records the final result. For Markets v2, the oracle proposes an outcome with the full source binding and an evidence hash. Trading stops at the proposal.',
+      'The guardian can cancel a v2 proposal within 24 hours. After the window, anyone can finalize it. Claims open once the result is final.',
     ],
   },
   {
