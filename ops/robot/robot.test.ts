@@ -4,7 +4,13 @@ import { LISTING_COST_UGNOT, pickListings, slotLimits, surplusOf, twoSided, v1Mo
 import { MsgCall } from '@gnolang/gno-js-client';
 import { ResponseDeliverTx, Tx, uint8ArrayToBase64, type ABCIResponse, type AbciQueryParams } from '@gnolang/tm2-js-client';
 import { feeUgnot, gasWanted, simulateGas, simulationJudged, SimulationRefused, ugnotPerGas } from './signer.ts';
-import { JUDGING_WINDOW, robotSettings, timeOf } from './settings.ts';
+import { JUDGING_WINDOW, reviewedOutcomes, robotSettings, timeOf } from './settings.ts';
+
+test('reviewed outcomes parse from the environment and ignore anything else', () => {
+  assert.deepEqual([...reviewedOutcomes('mlb-tb-cle-2026-10-16:Yes, x:No ,bad, y:Maybe,:Yes')], [['mlb-tb-cle-2026-10-16', 'Yes'], ['x', 'No']]);
+  assert.equal(reviewedOutcomes(undefined).size, 0);
+  assert.equal(robotSettings({ ROBOT_ORACLE_REVIEWED: 'a:Void' }).oracleReviewed.get('a'), 'Void');
+});
 
 test('a v1 quote is the midpoint to a tenth of a cent, never 0 or 1', () => {
   assert.equal(v1Price(439_500), 440_000);

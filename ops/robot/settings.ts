@@ -14,6 +14,20 @@ export function timeOf(value: string | undefined, fallback: number): number {
   return Number.isFinite(t) ? Math.floor(t) : fallback;
 }
 
+// ROBOT_ORACLE_REVIEWED="market-id:Yes,other-id:No": markets a person reviewed
+// after Polymarket changed their text. The robot oracle may propose that outcome,
+// with the frozen binding, and only when Polygon's agreed settlement says the same.
+export function reviewedOutcomes(value: string | undefined): Map<string, 'Yes' | 'No' | 'Void'> {
+  const out = new Map<string, 'Yes' | 'No' | 'Void'>();
+  for (const pair of (value ?? '').split(',').map(s => s.trim()).filter(Boolean)) {
+    const at = pair.lastIndexOf(':');
+    const id = pair.slice(0, at).trim();
+    const outcome = pair.slice(at + 1).trim();
+    if (at > 0 && (outcome === 'Yes' || outcome === 'No' || outcome === 'Void')) out.set(id, outcome);
+  }
+  return out;
+}
+
 export function robotSettings(env: Record<string, string | undefined>) {
   const window: ListingWindow | null = env.ROBOT_WINDOW === 'off' ? null : {
     from: timeOf(env.ROBOT_WINDOW_FROM, JUDGING_WINDOW.from),
@@ -29,5 +43,6 @@ export function robotSettings(env: Record<string, string | undefined>) {
     minBalanceUgnot: BigInt(env.ROBOT_MIN_BALANCE_UGNOT || 8_000_000),
     liveMax: Number(env.ROBOT_LIVE_MAX || 1),
     window,
+    oracleReviewed: reviewedOutcomes(env.ROBOT_ORACLE_REVIEWED),
   } satisfies Partial<RobotOptions>;
 }

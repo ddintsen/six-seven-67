@@ -62,7 +62,10 @@ export const evidenceHash = (record: EvidenceRecord) => sha256Hex(canonicalJson(
 
 const pct = (ppm: number) => (ppm / 10_000).toFixed(1) + '%';
 
-export async function decide(realmPath: string, m: ChainMarket, now: number, clob: ClobRead | null, polygon: PolygonRead): Promise<MarketStatus> {
+// reviewed: markets a person checked after Polymarket changed their text. The
+// frozen binding still decides what is proposed; the review only lets Polygon's
+// agreed result through when it is the outcome the person approved.
+export async function decide(realmPath: string, m: ChainMarket, now: number, clob: ClobRead | null, polygon: PolygonRead, reviewed: ReadonlyMap<string, 'Yes' | 'No' | 'Void'> = new Map()): Promise<MarketStatus> {
   const alerts: Alert[] = [];
   const actions: Action[] = [];
   const v2 = m.version === 2;
@@ -102,7 +105,7 @@ export async function decide(realmPath: string, m: ChainMarket, now: number, clo
     alerts.push({ key: `${m.id}:disagree`, severity: 'critical', title: `${m.id}: Polygon says ${result}, Polymarket's API says ${apiWinner}`, body: 'Nothing will be finalized until they agree.' });
   }
 
-  if (result && settlement && 'numerators' in settlement && bindingMatches !== false && !(apiWinner && apiWinner !== result)) {
+  if (result && settlement && 'numerators' in settlement && (bindingMatches !== false || reviewed.get(m.id) === result) && !(apiWinner && apiWinner !== result)) {
     evidence = {
       domain: 'six-seven.oracle-evidence', version: 2,
       binding: { realm: realmPath, marketId: m.id, conditionId: m.conditionId, rulesHash: m.rulesHash, yesTokenId: m.yesTokenId, noTokenId: m.noTokenId },

@@ -77,6 +77,7 @@ export interface RobotOptions {
   maxCalls?: number; // transactions per run
   deadlineMs?: number; // stop sending after this long
   fetcher?: typeof fetch;
+  oracleReviewed?: ReadonlyMap<string, 'Yes' | 'No' | 'Void'>; // markets a person reviewed after their source text changed (ROBOT_ORACLE_REVIEWED)
 }
 
 // The judging window: list matches whose trading ends at or after `from` and
@@ -219,7 +220,7 @@ export async function runRobot(signer: Signer, options: RobotOptions): Promise<R
   const reads = await pool(markets, 6, async m => {
     if (m.state === 'final') return { m, clob: null as ClobRead | null, status: null };
     const [clob, polygon] = await Promise.all([fetchClob(m.conditionId, m.yesTokenId, http).catch(() => null), readAgreedSettlement(m.conditionId)]);
-    return { m, clob, status: await decide(o.realm, m, now, clob, polygon) };
+    return { m, clob, status: await decide(o.realm, m, now, clob, polygon, o.oracleReviewed) };
   });
 
   // Results first: propose what Polygon settled (robot-oracle markets only), make

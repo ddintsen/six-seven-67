@@ -66,6 +66,17 @@ test('nothing is finalized on a 50-50, a disagreement or a changed binding', asy
   assert.ok(changed.alerts.some(a => a.key === 'fed:binding'));
 });
 
+test('a reviewed market proposes the frozen binding only when Polygon agrees with the review', async () => {
+  const reviewed = new Map([['fed', 'Yes' as const]]);
+  const ok = await decide(REALM, market(), NOW, clob({ rulesHash: 'x'.repeat(64) }), polygon('Yes', ['1', '0']), reviewed);
+  const propose = ok.actions.find(a => a.kind === 'finalize');
+  assert.ok(propose && propose.kind === 'finalize' && propose.outcome === 'Yes');
+  assert.equal(propose.args[2], 'h'.repeat(64)); // the frozen rules hash, not Polymarket's new text
+  assert.ok(ok.alerts.some(a => a.key === 'fed:binding'));
+  const other = await decide(REALM, market(), NOW, clob({ rulesHash: 'x'.repeat(64) }), polygon('No', ['0', '1']), reviewed);
+  assert.equal(other.actions.filter(a => a.kind === 'finalize').length, 0);
+});
+
 test('a match market binds its team names in token order and proposes the first team as Yes', async () => {
   const match = market({ version: 2, labels: { Yes: 'Lakers', No: 'Celtics' } });
   const tokens = [{ tokenId: '111', outcome: 'Lakers', winner: true }, { tokenId: '222', outcome: 'Celtics', winner: false }];
