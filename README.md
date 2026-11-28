@@ -12,8 +12,9 @@ Prediction markets on Gno.land with frozen terms, collateral checks and outcome 
 
 1. Open [Panthers vs. Eagles in Gnoweb](https://onyx.testnets.gno.land/r/nym-sixseven067/markets/v2:nfl-car-phi-2026-10-18). The realm renders the question, the rules hash, the Polymarket condition, the oracle and the record fixed at listing.
 2. Open the [purchase receipt](https://rpc.onyx.testnets.gno.land/tx?hash=0xA5F90CB7C145443E6C153913967161EF2043C4482FA0C275BC97CC6E29F4C3DA), block 432,668: `Bought` 6.208566 shares at 0.635 GNOT, cost 3.942440 plus fee 0.057560 test GNOT.
-3. Open the [proposal receipt](https://rpc.onyx.testnets.gno.land/tx?hash=0xFB22504649D26C75A625A518F3E792CCFD50F6FA0249844EC04E5563D304C767), block 1,442,078: `OutcomeProposed` with evidence hash `f587f7466219…7f1d`, final from 28 November 2026, 03:51:17 UTC. The same transaction also finalized three Markets v1 questions.
-4. Recompute the hash from the [published evidence records](docs/ONYX-V2-EVIDENCE.json) with the command in [docs/ONYX-EVIDENCE.md](docs/ONYX-EVIDENCE.md). Two Polygon RPCs return the payout vector `[1, 0] / 1` for the bound condition.
+3. Open the [proposal receipt](https://rpc.onyx.testnets.gno.land/tx?hash=0xFB22504649D26C75A625A518F3E792CCFD50F6FA0249844EC04E5563D304C767), block 1,442,078: `OutcomeProposed` with evidence hash `f587f7466219…7f1d`. The same transaction also finalized three Markets v1 questions.
+4. Open the [finalization receipt](https://rpc.onyx.testnets.gno.land/tx?hash=0x5D29EB4535C14065BC8AE379023DBC1AADCE97B2AE4B812D2E34ECBA0218C144), block 1,467,383: the 24-hour review passed without a cancellation, and the robot's scheduled run sent `Finalize` on 28 November 2026. `Finalized` repeats the evidence hash; the holder's claim pays 6.208566 test GNOT.
+5. Check it yourself: `node --experimental-strip-types ops/watcher/onyx-evidence.ts market nfl-car-phi-2026-10-18` rebuilds the hash from Polygon, where two RPCs return the payout vector `[1, 0] / 1` for the bound condition, and checks every receipt against its transaction bytes. [docs/ONYX-EVIDENCE.md](docs/ONYX-EVIDENCE.md) explains the output and recomputes the [published evidence records](docs/ONYX-V2-EVIDENCE.json).
 
 The walkthrough's purchase and payout scenes run in a controlled test environment; the receipts above come from the live realm.
 

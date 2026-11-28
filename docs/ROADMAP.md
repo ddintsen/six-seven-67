@@ -1,13 +1,13 @@
 # 67 roadmap
 
-Updated 27 November 2026.
+Updated 28 November 2026.
 
 67 offers prediction markets with published quotes, collateral checks and verifiable outcome evidence on Gno.land. The next step is a reproducible live Onyx lifecycle, then a pilot for additional resolution sources and community-proposed markets.
 
 ## Where it stands
 
 - Markets v2 is live on Onyx at `gno.land/r/nym-sixseven067/markets/v2`, beside the earlier Markets v1 and 67's own pages in Gno.
-- Panthers vs. Eagles has a verified purchase (block 432,668) and an oracle proposal (block 1,442,078) whose evidence hash recomputes from Polygon. It can be finalized from 28 November 2026, 03:51:17 UTC; the claim follows.
+- Panthers vs. Eagles has a verified purchase (block 432,668) and an oracle proposal (block 1,442,078) whose evidence hash recomputes from Polygon. The robot finalized it on 28 November 2026 (block 1,467,383) after the 24-hour review; the holder's claim completes the lifecycle.
 - Sabres vs. Maple Leafs finalized with a winner and India vs. West Indies as Void. Neither had trades. [Receipts and the verifier command](ONYX-EVIDENCE.md).
 
 ## Before the Gnome Tavern deadline (18 December 2026)
