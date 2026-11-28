@@ -1,6 +1,6 @@
 # Verification record
 
-Date: 2026-10-12, newest sections 2026-11-27 (Claude sessions). The commands table directly below is the 12 October baseline; each dated section after it records its own round. Scope: V6 (dark glass palette, cube mark, split header and menu sheet, night forest hero, How it works and Contract pages) on top of the V5 exchange, realm and chain layer. Earlier records (Codex, 2026-10-10/11) are in the previous source archive (`_to_delete/previews-v4/67-source.zip`).
+Date: 2026-10-12, newest sections 2026-11-28 (Claude sessions). The commands table directly below is the 12 October baseline; each dated section after it records its own round. Scope: V6 (dark glass palette, cube mark, split header and menu sheet, night forest hero, How it works and Contract pages) on top of the V5 exchange, realm and chain layer. Earlier records (Codex, 2026-10-10/11) are in the previous source archive (`_to_delete/previews-v4/67-source.zip`).
 
 Environment: Linux x64 cloud workspace; Node 22.22; npm 10.9; Playwright 1.64 with Chromium 1194 (SwiftShader software GL); gno, gnoland and gnokey v1.5.0; gnomcp 0.12.0.
 
@@ -18,6 +18,18 @@ Environment: Linux x64 cloud workspace; Node 22.22; npm 10.9; Playwright 1.64 wi
 | Standalone | `STANDALONE=1` build, `scripts/package-standalone.mjs` produced `67.html` (1.17 MB, 3D and still picture inlined) and `67-source.zip` (100 files, archive folders excluded); `scripts/verify-standalone.mjs` passed at 1440 and 390: default Testnet venue reads only the Onyx RPC and indexer, practice purchase and reload persistence, no local file requests, no horizontal overflow. |
 | axe-core (WCAG 2.0/2.1/2.2 A and AA tags) | No violations on home, markets, market, portfolio, how it works and contract, both venues, at 390 and 1440 (the scrollable code excerpt was made keyboard-focusable after the first run flagged it). |
 | Contrast on the real colours | Every text pair at least 4.5:1: ink on ground 16.5, muted on ground 7.7 and on hover 5.8, Yes on its tint 8.6, No on its tint 7.4, white on selected Yes 5.2 and No 6.4, ground on flint 16.5, caution 9.3, alert 7.2, code comments 4.6. Menu notes were moved from the quiet tone (4.4) to muted. |
+
+## Panthers vs. Eagles made final by the robot (November 28, 2026, 04:45 UTC, Windows device)
+
+| Check | Observed result |
+| --- | --- |
+| The robot's scheduled run (job `/api/robot?slot=1`, schedule `17 4 * * *`; the Hobby plan fired it at 04:41 UTC) | 14 transactions, none failed: `Finalize(nfl-car-phi-2026-10-18)` first, then 7 `SetQuote` and 6 `WithdrawSurplus`, blocks 1,467,383 to 1,467,397 |
+| The `Finalize` receipt | Block 1,467,383, tx `0x5D29EB4535C14065BC8AE379023DBC1AADCE97B2AE4B812D2E34ECBA0218C144`, signed by the robot `g13wgyakt05a202ekc09vk8mgdg9g4gdp6upxuna`. Its `Finalized` event records outcome Yes and evidence hash `f587f746…7f1d`, the same as the proposal in block 1,442,078 and the market's record |
+| `MarketJSON("nfl-car-phi-2026-10-18")` | `final`, outcome Yes, finalized at 04:41:34 UTC; one holder and nothing paid yet: the holder's `Claim` pays 6.208566 test GNOT |
+| `node --experimental-strip-types ops/watcher/onyx-evidence.ts market nfl-car-phi-2026-10-18` | `evidence.result` is `verified` (PublicNode and dRPC both return `[1, 0] / 1`); receipts `Bought` 432,668, `OutcomeProposed` 1,442,078 and `Finalized` 1,467,383, each checked against its transaction bytes; phase "Claim if eligible" |
+| `docs/ONYX-V2-EVIDENCE.json`, now three records | The recompute command in `docs/ONYX-EVIDENCE.md` prints the on-chain hashes of Sabres, India and Panthers |
+| `npm test` | 91 tests passed; the evidence tool's 3 tests are now part of the suite |
+| Balances after the run | Robot 297.91 test GNOT; robot oracle 2.79 test GNOT |
 
 ## A reviewed proposal: Rays vs. Guardians (November 28, 2026, 01:10 UTC, Windows device)
 

@@ -56,5 +56,34 @@
       "https://polygon-bor-rpc.publicnode.com",
       "https://polygon.drpc.org"
     ]
+  },
+  {
+    "evidenceHash": "f587f7466219c9071507749c4d1fe1705a3316d2e26de6919a3768a7b8337f1d",
+    "record": {
+      "domain": "six-seven.oracle-evidence",
+      "version": 2,
+      "binding": {
+        "realm": "gno.land/r/nym-sixseven067/markets/v2",
+        "marketId": "nfl-car-phi-2026-10-18",
+        "conditionId": "0x4bf48ea200ba9d253d5445ff5522f2e90ac4970d82da5a9fff6621308b5beeac",
+        "rulesHash": "ece69ed5b1ddbea2b795090d3de110ee8b4d82297cc3ccfe25da83ea40f3cb91",
+        "yesTokenId": "23830168081017919977585940888287745259637871438129079800143052949223046983431",
+        "noTokenId": "82914188951367172748889970099274188856470123976613269922741757092429595203588"
+      },
+      "polygon": {
+        "chainId": 137,
+        "contract": "0x4D97DCd97eC945f40cF65F87097ACe5EA0476045",
+        "payoutNumerators": [
+          "1",
+          "0"
+        ],
+        "payoutDenominator": "1"
+      },
+      "winner": "Yes"
+    },
+    "matchingRpc": [
+      "https://polygon-bor-rpc.publicnode.com",
+      "https://polygon.drpc.org"
+    ]
   }
 ]

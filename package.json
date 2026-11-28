@@ -8,7 +8,7 @@
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 6767",
-    "test": "node --experimental-strip-types --test src/adena.test.ts src/live/gno.test.ts server/gateway.test.mjs server/resolution-proposal.test.mjs src/live/oracle.test.ts src/live/gamma.test.ts src/live/listing.test.ts src/live/freshness.test.ts ops/robot/robot.test.ts",
+    "test": "node --experimental-strip-types --test src/adena.test.ts src/live/gno.test.ts server/gateway.test.mjs server/resolution-proposal.test.mjs src/live/oracle.test.ts src/live/gamma.test.ts src/live/listing.test.ts src/live/freshness.test.ts ops/robot/robot.test.ts ops/watcher/onyx-evidence.test.ts",
     "backend": "node server/index.mjs",
     "backend:smoke": "node server/smoke-live.mjs",
     "qa:e2e": "playwright test",
