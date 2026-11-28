@@ -19,6 +19,16 @@ Environment: Linux x64 cloud workspace; Node 22.22; npm 10.9; Playwright 1.64 wi
 | axe-core (WCAG 2.0/2.1/2.2 A and AA tags) | No violations on home, markets, market, portfolio, how it works and contract, both venues, at 390 and 1440 (the scrollable code excerpt was made keyboard-focusable after the first run flagged it). |
 | Contrast on the real colours | Every text pair at least 4.5:1: ink on ground 16.5, muted on ground 7.7 and on hover 5.8, Yes on its tint 8.6, No on its tint 7.4, white on selected Yes 5.2 and No 6.4, ground on flint 16.5, caution 9.3, alert 7.2, code comments 4.6. Menu notes were moved from the quiet tone (4.4) to muted. |
 
+## A reviewed proposal: Rays vs. Guardians (November 28, 2026, 01:10 UTC, Windows device)
+
+| Check | Observed result |
+| --- | --- |
+| The frozen rules of `mlb-tb-cle-2026-10-16` | "If the game is postponed, this market will remain open until the game has been completed": the game Polymarket moved to 17 October is covered. Polygon (two RPCs) says Rays (Yes) |
+| `npm run typecheck`, `npm test` | Passed; 88 tests, two new: a reviewed market proposes the frozen binding only when Polygon agrees, and `ROBOT_ORACLE_REVIEWED` parses strictly |
+| CI on `dfb7603` (main) | Gno realms and web app passed |
+| Deployment 16 | `dpl_E9ShnMkKohoQEUqwiUw9wYCfqzqU`, aliased to https://the67.click, with `ROBOT_ORACLE_REVIEWED=mlb-tb-cle-2026-10-16:Yes` (Production) |
+| Robot run (`vercel crons run "/api/robot?slot=4"`, 01:09:16 UTC) | The robot oracle sent `ProposeOutcome(mlb-tb-cle-2026-10-16, Yes)`, block 1,463,757, tx `0x2FAE9B15139383DEBEF2E777E494104F52EF7FE5871A50AEDCCEF32166C84A6E`, evidence `94d5cf0e971359c3c2e4dec485da071c0170fd1637136b5d79877e4855aea674`, final from 2026-11-29 01:09:17 UTC; Gnoweb shows "Proposed result" |
+
 ## The simulation fix and the first funded run (November 27, 2026, 20:30 UTC, Windows device)
 
 Environment: Windows 11; Node 24.18; Vercel CLI 54.18.1; live Onyx (`onyx-1`) at height about 1,459,000.
