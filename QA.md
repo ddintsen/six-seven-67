@@ -19,6 +19,18 @@ Environment: Linux x64 cloud workspace; Node 22.22; npm 10.9; Playwright 1.64 wi
 | axe-core (WCAG 2.0/2.1/2.2 A and AA tags) | No violations on home, markets, market, portfolio, how it works and contract, both venues, at 390 and 1440 (the scrollable code excerpt was made keyboard-focusable after the first run flagged it). |
 | Contrast on the real colours | Every text pair at least 4.5:1: ink on ground 16.5, muted on ground 7.7 and on hover 5.8, Yes on its tint 8.6, No on its tint 7.4, white on selected Yes 5.2 and No 6.4, ground on flint 16.5, caution 9.3, alert 7.2, code comments 4.6. Menu notes were moved from the quiet tone (4.4) to muted. |
 
+## A market to buy again: the near-term slot (November 28, 2026, 16:40 UTC, Windows device)
+
+| Check | Observed result |
+| --- | --- |
+| Why v2 had nothing to buy | A robot dry run at 16:17 UTC said "no match fits the window or the near-term slot yet". The slot lists a match only if it still trades two days, and the candidates are Polymarket's events by 24-hour volume, which are mostly games of the next day or two. The three owner-oracle markets and Rays vs. Guardians were all closed |
+| `npm test`, `npm run typecheck` | 91 tests passed with the new setting `ROBOT_MIN_LIFE_SECONDS` (default 172800, unchanged; 21600 is the six hours the listing rules already allow); typecheck clean |
+| Dry run with `ROBOT_MIN_LIFE_SECONDS=21600` | Plans `CreateMarket` and `Fund` for `nba-phi-hou-2026-11-28`, 76ers vs. Rockets, closing 2026-11-29 01:20 UTC ("Ten minutes before the game starts"), oracle the robot oracle, 3 GNOT reserve; no errors |
+| CI on `86df144` (main) | Realm and web checks passed |
+| Deployment 17 | `dpl_GZxEUXKj1pgexxUSmRuhuigr9Lgz`, aliased to https://the67.click, with the new Production variable `ROBOT_MIN_LIFE_SECONDS=21600` |
+| Robot run (`vercel crons run "/api/robot?slot=4"`, 16:35 UTC) | 16 transactions, none failed: `CreateMarket` [block 1,479,514](https://rpc.onyx.testnets.gno.land/tx?hash=0x6CAB94F9D29CAC8BECDEB2D7FC83D2B9344A5555DA1852DA421FE58B16A25DB1), `Fund` [block 1,479,515](https://rpc.onyx.testnets.gno.land/tx?hash=0x1C76F2B93D87D5930A8C7A9923D42387B47D9721085A7BBE2F91B33E7E2B3804), 2 `SetQuote` and 12 `WithdrawSurplus` |
+| The market on chain and in the app | State `open`, 76ers 18.5% / Rockets 81.5%, quote valid 23.9 hours, escrow 3 GNOT; Gnoweb renders the rules; https://the67.click/#/market/nba-phi-hou-2026-11-28 shows "Buy 76ers 0.185" and "Buy Rockets 0.815" |
+
 ## Panthers vs. Eagles made final by the robot (November 28, 2026, 04:45 UTC, Windows device)
 
 | Check | Observed result |
