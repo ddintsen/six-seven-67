@@ -9,6 +9,8 @@ import { JUDGING_WINDOW, reviewedOutcomes, robotSettings, timeOf } from './setti
 test('reviewed outcomes parse from the environment and ignore anything else', () => {
   assert.deepEqual([...reviewedOutcomes('mlb-tb-cle-2026-10-16:Yes, x:No ,bad, y:Maybe,:Yes')], [['mlb-tb-cle-2026-10-16', 'Yes'], ['x', 'No']]);
   assert.equal(reviewedOutcomes(undefined).size, 0);
+  assert.equal(robotSettings({}).minLifeSeconds, 2 * 86_400);
+  assert.equal(robotSettings({ ROBOT_MIN_LIFE_SECONDS: '21600' }).minLifeSeconds, 21_600);
   assert.equal(robotSettings({ ROBOT_ORACLE_REVIEWED: 'a:Void' }).oracleReviewed.get('a'), 'Void');
 });
 

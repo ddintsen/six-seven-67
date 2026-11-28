@@ -42,6 +42,9 @@ export function robotSettings(env: Record<string, string | undefined>) {
     reserveUgnot: BigInt(env.ROBOT_RESERVE_UGNOT || 3_000_000),
     minBalanceUgnot: BigInt(env.ROBOT_MIN_BALANCE_UGNOT || 8_000_000),
     liveMax: Number(env.ROBOT_LIVE_MAX || 1),
+    // A near-term match must trade at least this long. Polymarket's busiest events are mostly games of the
+    // next day or two, so the default of two days can leave the slot empty; the realm accepts six hours.
+    minLifeSeconds: Number(env.ROBOT_MIN_LIFE_SECONDS || 2 * 86_400),
     window,
     oracleReviewed: reviewedOutcomes(env.ROBOT_ORACLE_REVIEWED),
   } satisfies Partial<RobotOptions>;

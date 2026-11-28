@@ -34,6 +34,7 @@ Environment variables (Production, encrypted):
 | `CRON_SECRET` | Random, created the same way |
 | `ROBOT_ORACLE_MNEMONIC` | The robot-oracle's key, generated on the owner's computer and piped straight into Vercel the same way |
 | `ROBOT_REALM` | `gno.land/r/nym-sixseven067/markets/v2` |
+| `ROBOT_MIN_LIFE_SECONDS` | Optional: how long a near-term match must still trade when it is listed; default 172800 (two days). The candidates are Polymarket's events by 24-hour volume, mostly games of the next day or two, so 21600 (six hours, the least the listing rules allow) fills the slot when nothing trades two days out |
 | `ROBOT_ORACLE_REVIEWED` | Optional: comma-separated `market-id:Outcome` pairs (`Yes`, `No` or `Void`) for markets a person reviewed after their source text changed; anything else in the value is ignored. `mlb-tb-cle-2026-10-16:Yes` since deployment 16 |
 | `ROBOT_RPC`, `ROBOT_V1_REALM`, `ROBOT_LIST_PER_RUN`, `ROBOT_MAX_OPEN`, `ROBOT_RESERVE_UGNOT`, `ROBOT_MIN_BALANCE_UGNOT`, `ROBOT_LIST_KINDS`, `ROBOT_LIVE_MAX` | Optional; defaults (`ops/robot/settings.ts`): Onyx RPC, the v1 realm, 2, 6, 3000000, 8000000, `games`, 1 |
 | `ROBOT_WINDOW_FROM`, `ROBOT_WINDOW_TO`, `ROBOT_WINDOW_MAX`, `ROBOT_WINDOW_RESERVE_UGNOT`, `ROBOT_WINDOW` | Optional; the listing window: 2026-12-21T00:00Z, 2026-12-23T00:00Z, 4, 8000000; `off` disables it |
